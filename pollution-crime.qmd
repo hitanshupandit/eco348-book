@@ -1,0 +1,143 @@
+---
+title: "Pollution and Crime"
+subtitle: "Week 10 · Pigouvian taxes, the Coase theorem, and social multipliers"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** Brueckner, Chapters 9 and 10; @currie2015; @chalfin2017.
+:::
+
+## The model
+
+Cities put people close together, which makes both pollution and crime more costly. Both topics turn on **externalities** and on how people respond to incentives.
+
+### Pollution: Pigou and Coase
+
+A factory that ignores the harm its emissions cause to neighbors produces where price equals its **marginal private cost**. The efficient output sets price equal to **marginal social cost**, private cost plus the marginal damage to others:
+
+$$
+P = MPC(Q) + MD(Q).
+$$
+
+A **Pigouvian tax** equal to marginal damage at the efficient output makes the factory face the full cost. The **Coase theorem** offers another route: if property rights are clear and bargaining is cheap, the factory and its neighbors can negotiate to the efficient outcome on their own. In a dense city with thousands of affected residents, bargaining is rarely cheap.
+
+### Crime: incentives and social interactions
+
+In Gary Becker's model, a person commits a crime when the benefit exceeds the expected cost: the probability of being caught, $p$, times the punishment, $f$. Raising either deters crime, but the evidence favors **certainty** over **severity**.
+
+People also respond to one another. If each person's behavior depends partly on what their peers do, a policy that directly reduces crime by some amount sets off a chain of further reductions. With individual crime rate $a = b + s\,\bar{a}$, where $b$ reflects a person's own incentives, $\bar{a}$ the average among peers, and $0 < s < 1$ the strength of peer effects, the equilibrium is
+
+$$
+a = \frac{b}{1 - s}.
+$$
+
+The factor $1/(1-s)$ is the **social multiplier**.
+
+## Simulation 1: A Pigouvian tax
+
+The factory sells at price $P$ and has marginal private cost $MPC = 20 + mQ$ and marginal damage $MD = dQ$. Starting values match Problem B2 on Midterm 2.
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof price = Inputs.range([40, 120], {value: 80, step: 1, label: "Output price, P ($)"})
+viewof m = Inputs.range([0.5, 2], {value: 1, step: 0.05, label: "Private cost slope, m"})
+viewof dmg = Inputs.range([0, 2], {value: 0.5, step: 0.05, label: "Marginal damage slope, d"})
+```
+
+```{ojs}
+//| code-fold: true
+Qp = (price - 20) / m                     // private: P = MPC
+Qe = (price - 20) / (m + dmg)             // efficient: P = MPC + MD
+tax = dmg * Qe
+dwlP = 0.5 * (Qp - Qe) * (dmg * Qp)       // MSC - P at the private output equals d * Qp
+QmaxP = Qp * 1.3
+Plot.plot({
+  height: 320, marginLeft: 50,
+  x: {label: "Output, Q →", domain: [0, QmaxP]},
+  y: {label: "↑ Dollars per unit", grid: true, zero: true},
+  color: {legend: true, domain: ["Price", "Marginal private cost", "Marginal social cost"], range: ["#333", "#2b6cb0", "#881124"]},
+  marks: [
+    dmg > 0 ? Plot.areaY(d3.range(Qe, Qp, (Qp - Qe) / 50).concat([Qp]), {x: q => q, y1: () => price, y2: q => 20 + (m + dmg) * q, fill: "#881124", fillOpacity: 0.15}) : null,
+    Plot.ruleY([price], {stroke: () => "Price", strokeWidth: 2}),
+    Plot.line(d3.range(0, QmaxP, QmaxP / 100), {x: q => q, y: q => 20 + m * q, stroke: () => "Marginal private cost", strokeWidth: 2}),
+    Plot.line(d3.range(0, QmaxP, QmaxP / 100), {x: q => q, y: q => 20 + (m + dmg) * q, stroke: () => "Marginal social cost", strokeWidth: 2}),
+    Plot.dot([{q: Qp, v: price}, {q: Qe, v: price}], {x: "q", y: "v", r: 5, fill: "black"})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+html`<table class="table table-sm readout"><tbody>
+  <tr><td>Output when damage is ignored</td><td>${Qp.toFixed(1)}</td></tr>
+  <tr><td>Efficient output</td><td>${Qe.toFixed(1)}</td></tr>
+  <tr><td>Pigouvian tax per unit</td><td>$${tax.toFixed(2)}</td></tr>
+  <tr><td>Deadweight loss without the tax (shaded)</td><td>$${dwlP.toFixed(0)}</td></tr>
+</tbody></table>`
+```
+:::
+
+## Simulation 2: The social multiplier
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof s = Inputs.range([0, 0.9], {value: 0.5, step: 0.05, label: "Strength of peer effects, s"})
+viewof cut = Inputs.range([0, 10], {value: 2, step: 0.5, label: "Direct effect of a policy on each person's crime rate, Δb (points)"})
+```
+
+```{ojs}
+//| code-fold: true
+mult = 1 / (1 - s)
+Plot.plot({
+  height: 200, marginLeft: 150,
+  x: {label: "Reduction in the crime rate (points) →", grid: true, zero: true},
+  y: {label: null},
+  marks: [
+    Plot.barX([{k: "Direct effect", v: cut}, {k: "Total effect with peers", v: cut * mult}], {x: "v", y: "k", fill: d => d.k === "Direct effect" ? "#999" : "#881124"}),
+    Plot.text([{k: "Direct effect", v: cut}, {k: "Total effect with peers", v: cut * mult}], {x: "v", y: "k", text: d => d.v.toFixed(1), dx: 18})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+html`<p class="readout">Social multiplier 1 / (1 − s) = <strong>${mult.toFixed(2)}</strong>. A policy that directly lowers crime by ${cut} points lowers it by <strong>${(cut * mult).toFixed(1)}</strong> points once peers respond to each other.</p>`
+```
+:::
+
+### Things to try
+
+1. In Simulation 1, confirm the midterm answers: private output 60, efficient output 40, a \$20 tax, and a \$300 deadweight loss.
+2. Set marginal damage to zero. What happens to the tax and the deadweight loss? Why?
+3. Raise the damage slope. Does the efficient output fall by a lot or a little? What does that suggest about how stringent pollution rules should be near dense neighborhoods?
+4. In Simulation 2, set $s = 0$. What is the multiplier? Now raise $s$ to 0.8. Why do small differences in incentives produce big differences in crime when peer effects are strong?
+5. Peer effects amplify bad shocks too. Use Simulation 2 to explain how a small rise in unemployment could produce a large rise in crime.
+
+## What the evidence says
+
+**What people pay to avoid pollution.** @currie2015 study about 1,600 openings and closings of industrial plants that emit toxic pollutants. Comparing homes very close to a plant with homes slightly farther away, before and after, they find that nearby home values fall when a plant opens and recover after it closes, and that infants born close to plants are in worse health. House prices reveal what people are willing to pay for cleaner air, the **hedonic** approach.
+
+**What deters crime.** @chalfin2017 review the evidence and conclude that increases in the **certainty** of being caught, especially through more police, reduce crime more reliably than increases in the **severity** of punishment, such as longer sentences. Offenders may weigh the immediate risk of arrest more than a distant prison term.
+
+## Closer to home
+
+- The paper and textile mills along Maine's rivers once discharged heavily into the water. Use the Coase theorem to explain why downstream towns could not simply bargain with the mills.
+- Lewiston has invested in community policing downtown. Using the deterrence evidence, what kind of police activity would you expect to matter most?
+
+::: {.network-lens}
+### Network lens: crime spreads through social interactions
+
+Why do crime rates differ so much between cities that look alike on paper? @glaeser1996crime build a model where each person's choice depends on their neighbors' choices and use it to measure social interactions from how much crime varies across places. They find variation far larger than differences in observable characteristics can explain, implying strong social interactions, which are largest for petty crimes and smallest for serious crimes such as murder. Simulation 2 is a stripped-down version of that idea.
+:::
+
+## Did you know?
+
+Three of the ideas on this page carry famous names. Arthur Pigou proposed taxing activities that harm others in *The Economics of Welfare* (1920). Ronald Coase's "The Problem of Social Cost" (1960) showed when bargaining can solve the problem instead. And Gary Becker's "Crime and Punishment: An Economic Approach" (1968) began, he later recalled, when he was running late and weighed the cost of an illegal parking spot against the risk of a ticket.
+
+## Practice questions
+
+1. Using a graph, show the private and efficient output of a polluting factory, the Pigouvian tax, and the deadweight loss.
+2. State the Coase theorem and explain why it rarely applies to urban pollution.
+3. Derive the social multiplier from $a = b + s\bar{a}$ and explain why it implies large differences in crime across similar places.

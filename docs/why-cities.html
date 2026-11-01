@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.20">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Why Cities Exist – Urban Economics Lab</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./monocentric-city.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2c353fb1ee9795f3e46801e7bd733d82.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./why-cities.html">Why Cities Exist</a></li><li class="breadcrumb-item"><a href="./why-cities.html">Why Cities Exist</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Urban Economics Lab</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Why Cities Exist</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./why-cities.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Why Cities Exist</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./monocentric-city.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Monocentric City</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./extending-model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extending the Model</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Land Use and Transportation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sprawl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sprawl and Land-Use Controls</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./congestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Traffic Congestion</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Housing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tenure-choice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Owning versus Renting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./housing-supply.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Housing Supply and Affordability</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./housing-policy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Housing Policy</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Local Government and Quality of Life</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./neighborhoods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Local Public Goods and Neighborhoods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pollution-crime.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pollution and Crime</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./quality-of-life.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Measuring Quality of Life</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./place-based.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Place-Based Policy</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-model" id="toc-the-model" class="nav-link active" data-scroll-target="#the-model">The model</a>
+  <ul class="collapse">
+  <li><a href="#why-not-spread-out" id="toc-why-not-spread-out" class="nav-link" data-scroll-target="#why-not-spread-out">Why not spread out?</a></li>
+  <li><a href="#agglomeration-economies" id="toc-agglomeration-economies" class="nav-link" data-scroll-target="#agglomeration-economies">Agglomeration economies</a></li>
+  <li><a href="#spatial-equilibrium-across-cities" id="toc-spatial-equilibrium-across-cities" class="nav-link" data-scroll-target="#spatial-equilibrium-across-cities">Spatial equilibrium across cities</a></li>
+  <li><a href="#how-big-does-a-city-get" id="toc-how-big-does-a-city-get" class="nav-link" data-scroll-target="#how-big-does-a-city-get">How big does a city get?</a></li>
+  </ul></li>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation">Simulation</a>
+  <ul class="collapse">
+  <li><a href="#things-to-try" id="toc-things-to-try" class="nav-link" data-scroll-target="#things-to-try">Things to try</a></li>
+  </ul></li>
+  <li><a href="#what-the-evidence-says" id="toc-what-the-evidence-says" class="nav-link" data-scroll-target="#what-the-evidence-says">What the evidence says</a></li>
+  <li><a href="#closer-to-home" id="toc-closer-to-home" class="nav-link" data-scroll-target="#closer-to-home">Closer to home</a>
+  <ul class="collapse">
+  <li><a href="#network-lens-proximity-still-shapes-who-knows-whom" id="toc-network-lens-proximity-still-shapes-who-knows-whom" class="nav-link" data-scroll-target="#network-lens-proximity-still-shapes-who-knows-whom">Network lens: proximity still shapes who knows whom</a></li>
+  </ul></li>
+  <li><a href="#did-you-know" id="toc-did-you-know" class="nav-link" data-scroll-target="#did-you-know">Did you know?</a></li>
+  <li><a href="#practice-questions" id="toc-practice-questions" class="nav-link" data-scroll-target="#practice-questions">Practice questions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./why-cities.html">Why Cities Exist</a></li><li class="breadcrumb-item"><a href="./why-cities.html">Why Cities Exist</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Why Cities Exist</h1>
+<p class="subtitle lead">Week 1 · Agglomeration, spatial equilibrium, and how big a city gets</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Read:</strong> Brueckner, Chapter 1; <span class="citation" data-cites="glaeser1998">Glaeser (<a href="#ref-glaeser1998" role="doc-biblioref">1998</a>)</span>; <span class="citation" data-cites="glaeser2009wealth">Glaeser and Gottlieb (<a href="#ref-glaeser2009wealth" role="doc-biblioref">2009</a>)</span>; <span class="citation" data-cites="bailey2018social">Bailey et al. (<a href="#ref-bailey2018social" role="doc-biblioref">2018</a>)</span>.</p>
+</div>
+</div>
+</div>
+<section id="the-model" class="level2">
+<h2 class="anchored" data-anchor-id="the-model">The model</h2>
+<p>Rent for a one-bedroom apartment in Boston is far higher than in rural Maine. Commutes are longer, streets are louder, and parking is scarce. Yet roughly four in five Americans live in urban areas. Why do so many people pay more to live close to one another? Because being close to other people and firms makes us more productive and gives us access to things we value.</p>
+<section id="why-not-spread-out" class="level3">
+<h3 class="anchored" data-anchor-id="why-not-spread-out">Why not spread out?</h3>
+<p>In a world where everyone could produce what they need on their own plot, with no advantage to working at scale, there would be no reason to live near anyone, and land would be cheap everywhere. Cities appear because of two forces:</p>
+<ul>
+<li><strong>Scale economies.</strong> Some goods are much cheaper to make in large plants or offices, so production concentrates in a few places and workers live nearby.</li>
+<li><strong>Transport costs.</strong> Moving goods, people, and ideas takes money and time, so it pays to locate near customers, suppliers, ports, and rivers.</li>
+</ul>
+</section>
+<section id="agglomeration-economies" class="level3">
+<h3 class="anchored" data-anchor-id="agglomeration-economies">Agglomeration economies</h3>
+<p>Once a city exists, firms become more productive simply because other firms and workers are nearby. These <strong>agglomeration economies</strong> work through three channels <span class="citation" data-cites="duranton2004">(<a href="#ref-duranton2004" role="doc-biblioref">Duranton and Puga 2004</a>)</span>:</p>
+<ul>
+<li><strong>Sharing:</strong> firms share suppliers, infrastructure, and a large pool of workers.</li>
+<li><strong>Matching:</strong> a big labor market makes it easier to fit the right worker to each job.</li>
+<li><strong>Learning:</strong> ideas spread faster when people meet face to face.</li>
+</ul>
+<p><strong>Localization economies</strong> come from many firms in the <em>same</em> industry clustering together; <strong>urbanization economies</strong> come from the size and variety of the whole city.</p>
+</section>
+<section id="spatial-equilibrium-across-cities" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-equilibrium-across-cities">Spatial equilibrium across cities</h3>
+<p>If big cities make workers more productive, why doesn’t everyone move to the highest-wage city? Because moving bids the advantage away. A worker in city <span class="math inline">\(i\)</span> earns wage <span class="math inline">\(w_i\)</span>, pays rent <span class="math inline">\(r_i\)</span>, and enjoys amenities worth <span class="math inline">\(a_i\)</span>:</p>
+<p><span class="math display">\[
+V_i = w_i - r_i + a_i = \bar{V} \quad \text{for every city } i.
+\]</span></p>
+<p>With free mobility, utility is the same everywhere for the marginal mover <span class="citation" data-cites="roback1982 glaeser2009wealth">(<a href="#ref-roback1982" role="doc-biblioref">Roback 1982</a>; <a href="#ref-glaeser2009wealth" role="doc-biblioref">Glaeser and Gottlieb 2009</a>)</span>. High wages <em>with</em> high rents signal a <strong>productive</strong> city; high rents with <em>low</em> wages signal valuable <strong>amenities</strong>.</p>
+</section>
+<section id="how-big-does-a-city-get" class="level3">
+<h3 class="anchored" data-anchor-id="how-big-does-a-city-get">How big does a city get?</h3>
+<p>Agglomeration benefits grow with population, but so do congestion and housing costs. So utility per resident first rises with population, peaks at some size <span class="math inline">\(N^*\)</span>, and then falls. People move in as long as the city beats the utility <span class="math inline">\(\bar{u}\)</span> they could get elsewhere. The simulation shows where that leaves the city.</p>
+</section>
+</section>
+<section id="simulation" class="level2">
+<h2 class="anchored" data-anchor-id="simulation">Simulation</h2>
+<p>Utility per resident is <span class="math inline">\(u(N) = 20 + aN - cN^2\)</span>, where <span class="math inline">\(a\)</span> measures agglomeration benefits and <span class="math inline">\(c\)</span> congestion costs. Population <span class="math inline">\(N\)</span> is in hundreds of thousands.</p>
+<div class="sim">
+<div class="cell">
+<details class="code-fold hidden">
+<summary>Show the simulation code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="52" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 51;"><span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>viewof aggl <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">2</span><span class="op">,</span> <span class="dv">14</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Agglomeration benefit, a"</span>})</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>viewof cong <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="fl">0.3</span><span class="op">,</span> <span class="dv">2</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="fl">0.8</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.05</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Congestion cost, c"</span>})</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>viewof ubar <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">10</span><span class="op">,</span> <span class="dv">50</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">30</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Utility available elsewhere, ū"</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the simulation code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" data-startfrom="59" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 58;"><span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> n <span class="kw">=&gt;</span> <span class="dv">20</span> <span class="op">+</span> aggl <span class="op">*</span> n <span class="op">-</span> cong <span class="op">*</span> n <span class="op">*</span> n</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>Nstar <span class="op">=</span> aggl <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> cong)                         <span class="co">// size that maximizes utility per resident</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>disc <span class="op">=</span> aggl <span class="op">*</span> aggl <span class="op">+</span> <span class="dv">4</span> <span class="op">*</span> cong <span class="op">*</span> (<span class="dv">20</span> <span class="op">-</span> ubar)       <span class="co">// u(N) = ubar is a quadratic in N</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>roots <span class="op">=</span> disc <span class="op">&gt;=</span> <span class="dv">0</span> <span class="op">?</span> [(aggl <span class="op">-</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(disc)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> cong)<span class="op">,</span> (aggl <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(disc)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> cong)] <span class="op">:</span> []</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>stable <span class="op">=</span> roots<span class="op">.</span><span class="at">length</span> <span class="op">?</span> roots[<span class="dv">1</span>] <span class="op">:</span> <span class="kw">NaN</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>unstable <span class="op">=</span> roots<span class="op">.</span><span class="at">length</span> <span class="op">?</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(roots[<span class="dv">0</span>]<span class="op">,</span> <span class="dv">0</span>) <span class="op">:</span> <span class="kw">NaN</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>Nmax <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(aggl <span class="op">/</span> cong<span class="op">,</span> <span class="dv">2</span>) <span class="op">*</span> <span class="fl">1.05</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  <span class="dt">height</span><span class="op">:</span> <span class="dv">340</span><span class="op">,</span> <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">50</span><span class="op">,</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"City population, N (hundred thousand) →"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> Nmax]}<span class="op">,</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"↑ Utility per resident"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span>}<span class="op">,</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">line</span>(d3<span class="op">.</span><span class="fu">range</span>(<span class="dv">0</span><span class="op">,</span> Nmax<span class="op">,</span> Nmax <span class="op">/</span> <span class="dv">200</span>)<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> u<span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#881124"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="dv">3</span>})<span class="op">,</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleY</span>([ubar]<span class="op">,</span> {<span class="dt">stroke</span><span class="op">:</span> <span class="st">"#888"</span><span class="op">,</span> <span class="dt">strokeDasharray</span><span class="op">:</span> <span class="st">"5,4"</span>})<span class="op">,</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>([{<span class="dt">n</span><span class="op">:</span> Nstar<span class="op">,</span> <span class="dt">v</span><span class="op">:</span> <span class="fu">u</span>(Nstar)}]<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"n"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"v"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"black"</span>})<span class="op">,</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">text</span>([{<span class="dt">n</span><span class="op">:</span> Nstar<span class="op">,</span> <span class="dt">v</span><span class="op">:</span> <span class="fu">u</span>(Nstar)}]<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"n"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"v"</span><span class="op">,</span> <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"N*"</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="op">-</span><span class="dv">12</span>})<span class="op">,</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>    roots<span class="op">.</span><span class="at">length</span> <span class="op">?</span> Plot<span class="op">.</span><span class="fu">dot</span>([{<span class="dt">n</span><span class="op">:</span> stable<span class="op">,</span> <span class="dt">v</span><span class="op">:</span> ubar}]<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"n"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"v"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#881124"</span>}) <span class="op">:</span> <span class="kw">null</span><span class="op">,</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>    roots<span class="op">.</span><span class="at">length</span> <span class="op">?</span> Plot<span class="op">.</span><span class="fu">text</span>([{<span class="dt">n</span><span class="op">:</span> stable<span class="op">,</span> <span class="dt">v</span><span class="op">:</span> ubar}]<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"n"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"v"</span><span class="op">,</span> <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"stable"</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="dv">16</span>}) <span class="op">:</span> <span class="kw">null</span><span class="op">,</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    roots<span class="op">.</span><span class="at">length</span> <span class="op">&amp;&amp;</span> roots[<span class="dv">0</span>] <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">?</span> Plot<span class="op">.</span><span class="fu">dot</span>([{<span class="dt">n</span><span class="op">:</span> unstable<span class="op">,</span> <span class="dt">v</span><span class="op">:</span> ubar}]<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"n"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"v"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#888"</span>}) <span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-8" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold hidden">
+<summary>Show the simulation code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="83" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 82;"><span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span><span class="sc">${</span>roots<span class="op">.</span><span class="at">length</span> <span class="op">?</span> <span class="st">""</span> <span class="op">:</span> <span class="fu">html</span><span class="vs">`&lt;p&gt;&lt;strong&gt;No city forms:&lt;/strong&gt; even at its best size, the city cannot beat the utility available elsewhere.&lt;/p&gt;`</span><span class="sc">}</span></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;table class="table table-sm readout"&gt;&lt;tbody&gt;</span></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;tr&gt;&lt;td&gt;Size that maximizes utility, N*&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span>Nstar<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;/tr&gt;</span></span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;tr&gt;&lt;td&gt;Equilibrium size (stable)&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span>roots<span class="op">.</span><span class="at">length</span> <span class="op">?</span> stable<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>) <span class="op">:</span> <span class="st">"none"</span><span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;/tr&gt;</span></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;tr&gt;&lt;td&gt;How much larger than N*&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span>roots<span class="op">.</span><span class="at">length</span> <span class="op">?</span> ((stable <span class="op">/</span> Nstar <span class="op">-</span> <span class="dv">1</span>) <span class="op">*</span> <span class="dv">100</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>) <span class="op">+</span> <span class="st">"%"</span> <span class="op">:</span> <span class="st">"none"</span><span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;/tr&gt;</span></span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;tr&gt;&lt;td&gt;Utility per resident at N* versus in equilibrium&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span><span class="fu">u</span>(Nstar)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>)<span class="sc">}</span><span class="vs"> vs </span><span class="sc">${</span>roots<span class="op">.</span><span class="at">length</span> <span class="op">?</span> ubar<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>) <span class="op">:</span> <span class="st">"none"</span><span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;/tr&gt;</span></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/tbody&gt;&lt;/table&gt;`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<section id="things-to-try" class="level3">
+<h3 class="anchored" data-anchor-id="things-to-try">Things to try</h3>
+<ol type="1">
+<li>With the starting values, why is the equilibrium city <strong>larger than N*</strong>? What does each newcomer ignore when deciding to move in?</li>
+<li><strong>Raise the agglomeration benefit</strong> <span class="math inline">\(a\)</span>. What happens to <span class="math inline">\(N^*\)</span> and to the equilibrium size? Does the gap between them grow or shrink?</li>
+<li><strong>Raise the congestion cost</strong> <span class="math inline">\(c\)</span> (worse traffic, tighter housing). What happens to city size?</li>
+<li><strong>Raise ū</strong>, as if other places got better. At what point does the city stop existing?</li>
+<li>The left-hand crossing is <strong>unstable</strong>. Explain why a few extra residents there would set off a rush of growth.</li>
+</ol>
+</section>
+</section>
+<section id="what-the-evidence-says" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-evidence-says">What the evidence says</h2>
+<p><strong>Are cities dying?</strong> In the 1990s many observers expected cheaper phone calls and the internet to make cities obsolete. <span class="citation" data-cites="glaeser1998">Glaeser (<a href="#ref-glaeser1998" role="doc-biblioref">1998</a>)</span> argued that cities exist to cut the cost of moving goods, people, and ideas. Cheaper shipping weakened the first reason, but face-to-face learning and urban amenities kept cities alive. The same debate came back with remote work after COVID-19 (<a href="./extending-model.html">Extending the Model</a>).</p>
+<p><strong>Do cities make workers more productive?</strong> <span class="citation" data-cites="glaeser2009wealth">Glaeser and Gottlieb (<a href="#ref-glaeser2009wealth" role="doc-biblioref">2009</a>)</span> show that wages are higher in larger, denser metro areas, but so are housing costs, which absorb much of the gain, just as spatial equilibrium predicts. A hard question is whether big cities <em>make</em> workers more productive or simply <em>attract</em> more productive workers; separating the two is a recurring challenge in urban economics.</p>
+</section>
+<section id="closer-to-home" class="level2">
+<h2 class="anchored" data-anchor-id="closer-to-home">Closer to home</h2>
+<p>Lewiston grew around the falls of the Androscoggin River, whose water power ran large textile mills. Mills needed many workers, and workers needed housing and stores within walking distance: a city built on scale economies. When the textile industry moved away in the twentieth century, Lewiston lost jobs and population. In the early 2000s, immigrants and refugees, many from Somalia, began arriving and opening businesses downtown, and parts of the old mill complex have been redeveloped for offices, restaurants, and housing.</p>
+<ul>
+<li>Water power no longer matters. What advantages does Lewiston–Auburn have today?</li>
+<li>Portland has grown faster than Lewiston–Auburn. Is that because of productivity, amenities, or both? What data would tell them apart?</li>
+</ul>
+<section id="network-lens-proximity-still-shapes-who-knows-whom" class="level3 network-lens">
+<h3 class="anchored" data-anchor-id="network-lens-proximity-still-shapes-who-knows-whom">Network lens: proximity still shapes who knows whom</h3>
+<p>The learning channel of agglomeration is a claim about networks: ideas travel along personal connections, and connections form more easily between people who are close together. <span class="citation" data-cites="bailey2018social">Bailey et al. (<a href="#ref-bailey2018social" role="doc-biblioref">2018</a>)</span> measure this with the <strong>Social Connectedness Index</strong>, built from anonymized Facebook friendships between U.S. counties:</p>
+<p><span class="math display">\[
+\text{SCI}_{ij} = \frac{\text{friendship links between } i \text{ and } j}{\text{users in } i \times \text{users in } j}.
+\]</span></p>
+<p>Even on a global social network, friendships fall off steeply with distance, counties in the same state are more connected than equally distant counties across state lines, and more-connected places trade more and exchange more migrants. Distance still matters, which is one reason the learning benefits of cities persist.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ch01-distance-decay.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<figcaption>Illustrative shape of distance decay in social connectedness (simulated data; see Bailey et al.&nbsp;2018 for the real estimates).</figcaption>
+</figure>
+</div>
+<p>The SCI data are public through Meta’s Data for Good program. Try listing the counties most connected to Androscoggin County, Maine, and compare them with Cumberland County.</p>
+</section>
+</section>
+<section id="did-you-know" class="level2">
+<h2 class="anchored" data-anchor-id="did-you-know">Did you know?</h2>
+<p>Bates College takes its name from Benjamin Bates, the Boston investor behind the Bates Manufacturing Company, whose mills on the Androscoggin made Lewiston one of Maine’s major industrial cities. The college sits a short walk from the mills that once paid for it.</p>
+</section>
+<section id="practice-questions" class="level2">
+<h2 class="anchored" data-anchor-id="practice-questions">Practice questions</h2>
+<ol type="1">
+<li>Explain why cities form even though land is cheaper in rural areas. Use scale economies and transport costs, and give an example.</li>
+<li>Write down the spatial equilibrium condition across cities and use it to explain what high wages <em>with</em> high rents tell us about a city.</li>
+<li>Draw utility per resident against city population. Identify the stable equilibrium and explain why it is larger than <span class="math inline">\(N^*\)</span>.</li>
+</ol>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-bailey2018social" class="csl-entry" role="listitem">
+Bailey, Michael, Rachel Cao, Theresa Kuchler, Johannes Stroebel, and Arlene Wong. 2018. <span>“Social Connectedness: Measurement, Determinants, and Effects.”</span> <em>Journal of Economic Perspectives</em> 32 (3): 259–80. <a href="https://doi.org/10.1257/jep.32.3.259">https://doi.org/10.1257/jep.32.3.259</a>.
+</div>
+<div id="ref-duranton2004" class="csl-entry" role="listitem">
+Duranton, Gilles, and Diego Puga. 2004. <span>“Micro-Foundations of Urban Agglomeration Economies.”</span> In <em>Handbook of Regional and Urban Economics</em>, edited by J. Vernon Henderson and Jacques-François Thisse, vol. 4. Elsevier.
+</div>
+<div id="ref-glaeser1998" class="csl-entry" role="listitem">
+Glaeser, Edward L. 1998. <span>“Are Cities Dying?”</span> <em>Journal of Economic Perspectives</em> 12 (2): 139–60. <a href="https://doi.org/10.1257/jep.12.2.139">https://doi.org/10.1257/jep.12.2.139</a>.
+</div>
+<div id="ref-glaeser2009wealth" class="csl-entry" role="listitem">
+Glaeser, Edward L., and Joshua D. Gottlieb. 2009. <span>“The Wealth of Cities: Agglomeration Economies and Spatial Equilibrium in the <span>United States</span>.”</span> <em>Journal of Economic Literature</em> 47 (4): 983–1028. <a href="https://doi.org/10.1257/jel.47.4.983">https://doi.org/10.1257/jel.47.4.983</a>.
+</div>
+<div id="ref-roback1982" class="csl-entry" role="listitem">
+Roback, Jennifer. 1982. <span>“Wages, Rents, and the Quality of Life.”</span> <em>Journal of Political Economy</em> 90 (6): 1257–78. <a href="https://doi.org/10.1086/261120">https://doi.org/10.1086/261120</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBhZ2dsID0gSW5wdXRzLnJhbmdlKFsyLCAxNF0sIHt2YWx1ZTogOCwgc3RlcDogMC41LCBsYWJlbDogXCJBZ2dsb21lcmF0aW9uIGJlbmVmaXQsIGFcIn0pXG52aWV3b2YgY29uZyA9IElucHV0cy5yYW5nZShbMC4zLCAyXSwge3ZhbHVlOiAwLjgsIHN0ZXA6IDAuMDUsIGxhYmVsOiBcIkNvbmdlc3Rpb24gY29zdCwgY1wifSlcbnZpZXdvZiB1YmFyID0gSW5wdXRzLnJhbmdlKFsxMCwgNTBdLCB7dmFsdWU6IDMwLCBzdGVwOiAwLjUsIGxhYmVsOiBcIlV0aWxpdHkgYXZhaWxhYmxlIGVsc2V3aGVyZSwgxatcIn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ1ID0gbiA9PiAyMCArIGFnZ2wgKiBuIC0gY29uZyAqIG4gKiBuXG5Oc3RhciA9IGFnZ2wgLyAoMiAqIGNvbmcpICAgICAgICAgICAgICAgICAgICAgICAgIC8vIHNpemUgdGhhdCBtYXhpbWl6ZXMgdXRpbGl0eSBwZXIgcmVzaWRlbnRcbmRpc2MgPSBhZ2dsICogYWdnbCArIDQgKiBjb25nICogKDIwIC0gdWJhcikgICAgICAgLy8gdShOKSA9IHViYXIgaXMgYSBxdWFkcmF0aWMgaW4gTlxucm9vdHMgPSBkaXNjID49IDAgPyBbKGFnZ2wgLSBNYXRoLnNxcnQoZGlzYykpIC8gKDIgKiBjb25nKSwgKGFnZ2wgKyBNYXRoLnNxcnQoZGlzYykpIC8gKDIgKiBjb25nKV0gOiBbXVxuc3RhYmxlID0gcm9vdHMubGVuZ3RoID8gcm9vdHNbMV0gOiBOYU5cbnVuc3RhYmxlID0gcm9vdHMubGVuZ3RoID8gTWF0aC5tYXgocm9vdHNbMF0sIDApIDogTmFOXG5ObWF4ID0gTWF0aC5tYXgoYWdnbCAvIGNvbmcsIDIpICogMS4wNVxuUGxvdC5wbG90KHtcbiAgaGVpZ2h0OiAzNDAsIG1hcmdpbkxlZnQ6IDUwLFxuICB4OiB7bGFiZWw6IFwiQ2l0eSBwb3B1bGF0aW9uLCBOIChodW5kcmVkIHRob3VzYW5kKSDihpJcIiwgZG9tYWluOiBbMCwgTm1heF19LFxuICB5OiB7bGFiZWw6IFwi4oaRIFV0aWxpdHkgcGVyIHJlc2lkZW50XCIsIGdyaWQ6IHRydWV9LFxuICBtYXJrczogW1xuICAgIFBsb3QubGluZShkMy5yYW5nZSgwLCBObWF4LCBObWF4IC8gMjAwKSwge3g6IGQgPT4gZCwgeTogdSwgc3Ryb2tlOiBcIiM4ODExMjRcIiwgc3Ryb2tlV2lkdGg6IDN9KSxcbiAgICBQbG90LnJ1bGVZKFt1YmFyXSwge3N0cm9rZTogXCIjODg4XCIsIHN0cm9rZURhc2hhcnJheTogXCI1LDRcIn0pLFxuICAgIFBsb3QuZG90KFt7bjogTnN0YXIsIHY6IHUoTnN0YXIpfV0sIHt4OiBcIm5cIiwgeTogXCJ2XCIsIHI6IDUsIGZpbGw6IFwiYmxhY2tcIn0pLFxuICAgIFBsb3QudGV4dChbe246IE5zdGFyLCB2OiB1KE5zdGFyKX1dLCB7eDogXCJuXCIsIHk6IFwidlwiLCB0ZXh0OiAoKSA9PiBcIk4qXCIsIGR5OiAtMTJ9KSxcbiAgICByb290cy5sZW5ndGggPyBQbG90LmRvdChbe246IHN0YWJsZSwgdjogdWJhcn1dLCB7eDogXCJuXCIsIHk6IFwidlwiLCByOiA2LCBmaWxsOiBcIiM4ODExMjRcIn0pIDogbnVsbCxcbiAgICByb290cy5sZW5ndGggPyBQbG90LnRleHQoW3tuOiBzdGFibGUsIHY6IHViYXJ9XSwge3g6IFwiblwiLCB5OiBcInZcIiwgdGV4dDogKCkgPT4gXCJzdGFibGVcIiwgZHk6IDE2fSkgOiBudWxsLFxuICAgIHJvb3RzLmxlbmd0aCAmJiByb290c1swXSA+IDAgPyBQbG90LmRvdChbe246IHVuc3RhYmxlLCB2OiB1YmFyfV0sIHt4OiBcIm5cIiwgeTogXCJ2XCIsIHI6IDUsIGZpbGw6IFwiIzg4OFwifSkgOiBudWxsXG4gIF1cbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYCR7cm9vdHMubGVuZ3RoID8gXCJcIiA6IGh0bWxgPHA+PHN0cm9uZz5ObyBjaXR5IGZvcm1zOjwvc3Ryb25nPiBldmVuIGF0IGl0cyBiZXN0IHNpemUsIHRoZSBjaXR5IGNhbm5vdCBiZWF0IHRoZSB1dGlsaXR5IGF2YWlsYWJsZSBlbHNld2hlcmUuPC9wPmB9XG48dGFibGUgY2xhc3M9XCJ0YWJsZSB0YWJsZS1zbSByZWFkb3V0XCI+PHRib2R5PlxuICA8dHI+PHRkPlNpemUgdGhhdCBtYXhpbWl6ZXMgdXRpbGl0eSwgTio8L3RkPjx0ZD4ke05zdGFyLnRvRml4ZWQoMil9PC90ZD48L3RyPlxuICA8dHI+PHRkPkVxdWlsaWJyaXVtIHNpemUgKHN0YWJsZSk8L3RkPjx0ZD4ke3Jvb3RzLmxlbmd0aCA/IHN0YWJsZS50b0ZpeGVkKDIpIDogXCJub25lXCJ9PC90ZD48L3RyPlxuICA8dHI+PHRkPkhvdyBtdWNoIGxhcmdlciB0aGFuIE4qPC90ZD48dGQ+JHtyb290cy5sZW5ndGggPyAoKHN0YWJsZSAvIE5zdGFyIC0gMSkgKiAxMDApLnRvRml4ZWQoMCkgKyBcIiVcIiA6IFwibm9uZVwifTwvdGQ+PC90cj5cbiAgPHRyPjx0ZD5VdGlsaXR5IHBlciByZXNpZGVudCBhdCBOKiB2ZXJzdXMgaW4gZXF1aWxpYnJpdW08L3RkPjx0ZD4ke3UoTnN0YXIpLnRvRml4ZWQoMSl9IHZzICR7cm9vdHMubGVuZ3RoID8gdWJhci50b0ZpeGVkKDEpIDogXCJub25lXCJ9PC90ZD48L3RyPlxuPC90Ym9keT48L3RhYmxlPmBcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnYWdnbCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdjb25nJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3ViYXInKSJ9XX0=
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Overview">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Overview</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./monocentric-city.html" class="pagination-link" aria-label="The Monocentric City">
+        <span class="nav-page-text">The Monocentric City</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>ECON 348 · Bates College · Hitanshu Pandit · Written in Markdown and rendered with Quarto</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

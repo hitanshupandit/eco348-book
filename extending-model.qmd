@@ -1,0 +1,127 @@
+---
+title: "Extending the Model"
+subtitle: "Week 3 · Comparative statics, closed versus open cities, and remote work"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** Brueckner, Chapter 3; @gupta2022.
+:::
+
+## The model
+
+The [monocentric city](monocentric-city.qmd) gives us a rent gradient. This week we ask how it **changes** when something in the economy changes: incomes rise, the population grows, or commuting gets cheaper. Economists call this **comparative statics**.
+
+### Two kinds of cities
+
+The answer depends on whether people can move in and out.
+
+- In a **closed city**, the population is fixed. A change shows up in residents' well-being (their consumption $c$) and in rents.
+- In an **open city**, people move freely, so residents always end up exactly as well off as they could be elsewhere. A change shows up in **population** and **city size**, and landowners collect the gains or bear the losses.
+
+### What happens when commuting gets cheaper
+
+With fixed lot sizes, rent at distance $x$ is $r(x) = r_A + t(\bar{x} - x)$. Lower $t$, and:
+
+- **Closed city:** the edge $\bar{x}$ stays put (same people, same lots), the rent line **flattens**, and rent falls everywhere inside the edge. Residents keep the savings.
+- **Open city:** residents' well-being is pinned by the outside option, so CBD rent stays at $y - \bar{c}$. The flatter line reaches farmland farther out, so the city **expands** and newcomers move in.
+
+In Brueckner's full model, where households also choose how much space to use, cheaper commuting lets people spread out even in a closed city: rents fall near the center and rise toward the edge, and the city grows outward.
+
+### Remote work as a fall in $t$
+
+If you commute only on the days you go to the office, working from home some days cuts your yearly commuting cost. With $d$ remote days in a five-day week, the effective commuting cost becomes
+
+$$
+t_{\text{eff}} = t \left(1 - \frac{d}{5}\right).
+$$
+
+So the model predicts that remote work **flattens the rent gradient**: central locations lose some of their premium relative to outlying ones.
+
+## Simulation
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof mode2 = Inputs.radio(["Closed city", "Open city"], {value: "Closed city", label: "City type"})
+viewof days = Inputs.range([0, 5], {value: 0, step: 0.5, label: "Remote days per week, d"})
+viewof t2 = Inputs.range([500, 4000], {value: 1500, step: 50, label: "Commuting cost on office days, t ($ per mile per yr)"})
+viewof y2 = Inputs.range([30000, 120000], {value: 60000, step: 1000, label: "Income, y ($/yr)"})
+```
+
+```{ojs}
+//| code-fold: true
+// Fixed-lot circular city: 150,000 households, 4,000 lots per sq. mile, agricultural rent $3,000.
+rA2 = 3000
+xbar0 = Math.sqrt(150000 / (Math.PI * 4000))
+cbar2 = 60000 - 1500 * xbar0 - rA2                 // outside option = starting residents' consumption
+teff = t2 * (1 - days / 5)
+before = ({xbar: xbar0, t: 1500, c: cbar2, N: 150})
+after = {
+  if (mode2 === "Closed city") {
+    const c = y2 - teff * xbar0 - rA2;
+    return {xbar: xbar0, t: teff, c, N: 150};
+  }
+  const xbar = teff > 0 ? (y2 - cbar2 - rA2) / teff : Infinity;
+  return {xbar, t: teff, c: cbar2, N: Math.PI * 4000 * xbar * xbar / 1000};
+}
+xmax2 = Math.min(Math.max(before.xbar, isFinite(after.xbar) ? after.xbar : 0) * 1.15, 40)
+line2 = s => d3.range(0, xmax2, xmax2 / 200).map(x => ({x, r: x <= s.xbar ? rA2 + s.t * (s.xbar - x) : rA2}))
+Plot.plot({
+  height: 340, marginLeft: 70,
+  x: {label: "Distance from the CBD (miles) →", domain: [0, xmax2]},
+  y: {label: "↑ Rent ($ per lot per year)", grid: true, zero: true},
+  marks: [
+    Plot.line(line2(before), {x: "x", y: "r", stroke: "#999", strokeDasharray: "5,4"}),
+    Plot.line(line2(after), {x: "x", y: "r", stroke: "#881124", strokeWidth: 3})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+f2c = d3.format(",.0f")
+html`${isFinite(after.xbar) ? "" : html`<p><strong>With no commuting cost at all, an open city has no edge:</strong> everyone would move in. Set remote days below 5.</p>`}
+<table class="table table-sm readout">
+<thead><tr><th></th><th>Before (dashed)</th><th>After</th></tr></thead>
+<tbody>
+  <tr><td>Effective commuting cost ($ per mile per yr)</td><td>1,500</td><td>${f2c(teff)}</td></tr>
+  <tr><td>City radius (miles)</td><td>${before.xbar.toFixed(2)}</td><td>${isFinite(after.xbar) ? after.xbar.toFixed(2) : "unbounded"}</td></tr>
+  <tr><td>Population (thousand households)</td><td>150</td><td>${isFinite(after.N) ? f2c(after.N) : "unbounded"}</td></tr>
+  <tr><td>Rent at the CBD ($ per lot per yr)</td><td>${f2c(rA2 + 1500 * before.xbar)}</td><td>${isFinite(after.xbar) ? f2c(rA2 + after.t * after.xbar) : "n/a"}</td></tr>
+  <tr><td>Residents' other spending, c ($ per yr)</td><td>${f2c(before.c)}</td><td>${f2c(after.c)}</td></tr>
+</tbody></table>`
+```
+:::
+
+### Things to try
+
+1. In a **closed city**, move remote days from 0 to 2. Who gains: residents or landowners? By how much does rent at the CBD fall?
+2. Make the same change in an **open city**. Why doesn't CBD rent change? Where do the gains go instead?
+3. In an open city, set remote days to 4. How much larger does the city get? Where would the new residents come from in real life?
+4. **Raise income** $y$ with no remote work. Compare the closed and open cases.
+5. Put remote work and a commuting cost increase together (for example, higher gas prices). Can they cancel out?
+
+## What the evidence says
+
+@gupta2022 study U.S. housing markets during the pandemic. They find that house prices and rents fell in city centers relative to the suburbs in large metro areas, so the gradient of prices with distance from the center **flattened**, and the effect was larger where more jobs could be done remotely. That is exactly the comparative static in the simulation: a lower effective $t$ flattens the gradient. Whether the flattening lasts depends on how much remote work sticks.
+
+## Closer to home
+
+- During the pandemic, many remote workers moved to Maine from Boston and New York. In open-city terms, what happened to the "outside option" that Maine towns compete with?
+- If a Portland worker goes to the office two days a week instead of five, how much farther out could they live for the same total commuting cost?
+
+::: {.network-lens}
+### Network lens: rail networks and the first commuters
+
+The same comparative static played out 150 years ago, along a network of rail lines. @heblich2020 study London in the nineteenth century. As steam railways spread, commuting got much cheaper, and people could live and work in different places for the first time on a large scale. Residents spread outward along the rail network while jobs concentrated in the center, a lower $t$ along the links of a network rather than in every direction at once.
+:::
+
+## Did you know?
+
+Before streetcars and railways, most city residents lived within walking distance of their jobs, and historians call those places "walking cities." Horse-drawn and then electric streetcars in the late nineteenth century lowered $t$ and produced the first streetcar suburbs, decades before the automobile.
+
+## Practice questions
+
+1. Show graphically what happens to the rent gradient in a closed city when commuting costs fall. Who gains?
+2. Repeat for an open city. Why do the results differ?
+3. Explain why remote work acts like a fall in commuting cost, and summarize what @gupta2022 find.

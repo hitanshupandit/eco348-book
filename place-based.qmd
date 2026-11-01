@@ -1,0 +1,106 @@
+---
+title: "Place-Based Policy"
+subtitle: "Week 12 · Local multipliers and who gains from helping places"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** @austin2018. Optional: @moretti2010.
+:::
+
+## The model
+
+Some policies help **people** wherever they live: tax credits, job training, health insurance. Others help **places**: tax breaks for firms that locate in a struggling town, infrastructure grants, enterprise zones. Place-based policies are popular with politicians but controversial among economists. Why?
+
+### The case against: benefits get capitalized
+
+In a spatial equilibrium, people move until no place is better than another. If a policy makes a town more attractive, newcomers arrive and bid up rents. When people move easily and housing is hard to build, much of the gain ends up in **landowners'** pockets rather than with the workers the policy meant to help. Subsidizing places can also pull jobs from one town to another without creating any new jobs overall.
+
+### The case for: local multipliers and non-employment
+
+Two arguments push the other way.
+
+- **Local multipliers.** A new job in a **tradable** industry, one that sells outside the town, such as manufacturing or software, brings income into the local economy. That income supports additional **non-tradable** jobs: restaurants, stores, contractors, dentists. If each new tradable job supports $m$ local jobs, the total job gain is
+
+$$
+\text{total jobs} = J\,(1 + m).
+$$
+
+- **Where jobs matter most.** If places differ in how much jobs reduce non-employment and its harms, then putting jobs where the response is largest can raise overall well-being. This is the core argument in @austin2018.
+
+## Simulation
+
+A state offers a subsidy to attract new tradable jobs to a town. How many jobs does it create in total, and what does each job cost?
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof J = Inputs.range([0, 2000], {value: 500, step: 50, label: "New tradable jobs attracted, J"})
+viewof mLocal = Inputs.range([0, 3], {value: 1.6, step: 0.1, label: "Local multiplier, m (local jobs per tradable job)"})
+viewof subsidy = Inputs.range([0, 200000], {value: 50000, step: 5000, label: "Subsidy per tradable job ($)"})
+viewof wouldCome = Inputs.range([0, 100], {value: 30, step: 5, label: "Share of jobs that would have come anyway (%)"})
+```
+
+```{ojs}
+//| code-fold: true
+newJ = J * (1 - wouldCome / 100)              // jobs that exist only because of the subsidy
+localJ = newJ * mLocal
+totalJ = newJ + localJ
+cost = J * subsidy                             // the subsidy is paid on every job, including those that would have come anyway
+Plot.plot({
+  height: 200, marginLeft: 220,
+  x: {label: "Jobs →", grid: true, zero: true},
+  y: {label: null},
+  marks: [
+    Plot.barX([
+      {k: "Jobs that would have come anyway", v: J - newJ},
+      {k: "New tradable jobs", v: newJ},
+      {k: "New local service jobs", v: localJ}
+    ], {x: "v", y: "k", fill: d => d.k.startsWith("New local") ? "#881124" : d.k.startsWith("New") ? "#2b6cb0" : "#bbb"})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+fj = d3.format(",.0f")
+html`<table class="table table-sm readout"><tbody>
+  <tr><td>Total program cost</td><td>$${fj(cost)}</td></tr>
+  <tr><td>Jobs created by the subsidy (tradable + local)</td><td>${fj(totalJ)}</td></tr>
+  <tr><td>Cost per job actually created</td><td>${totalJ > 0 ? "$" + fj(cost / totalJ) : "n/a"}</td></tr>
+</tbody></table>`
+```
+:::
+
+### Things to try
+
+1. Set the multiplier to 0. What is the cost per job created? Now set it to 1.6. How much cheaper does each job become?
+2. Raise the share of jobs that **would have come anyway** to 70 percent. What happens to the cost per job? Why is this the hardest number for a state to know?
+3. Suppose the jobs are high-tech and the multiplier is 2.5. Is a larger subsidy justified?
+4. The simulation ignores capitalization. If new workers move in and bid up rents, who captures part of the gain?
+
+## What the evidence says
+
+**Local multipliers.** @moretti2010 estimates how many local jobs follow each new tradable job across U.S. cities. He finds that each additional manufacturing job is associated with about 1.6 additional jobs in the local non-tradable sector, and that the multiplier is larger for skilled and high-tech jobs.
+
+**Jobs for the heartland.** @austin2018 document that non-employment among prime-age men has become concentrated in parts of the eastern United States and argue that place-based policies can be justified where employment responds most strongly to policy. They favor policies that encourage employment, such as targeted employment subsidies, over policies that simply move jobs between places.
+
+## Closer to home
+
+- Lewiston–Auburn and many mill towns lost tradable manufacturing jobs over the past century. Using the multiplier logic, what happened to local service jobs when the mills closed?
+- Maine uses tax incentives to attract and keep businesses. Pick one program and ask: how many of the subsidized jobs would have come anyway?
+
+::: {.network-lens}
+### Network lens: towns are nodes in a regional network
+
+Lewiston–Auburn is linked to Portland by commuters, freight, and social ties. A job created in Portland can raise employment in Lewiston–Auburn through commuting, and a subsidy in one town can draw workers and businesses from its neighbors. Treating towns as nodes in a regional network, rather than islands, helps answer two questions that place-based policy often ignores: who actually fills the new jobs, and how much of the gain spills over to, or is taken from, nearby places.
+:::
+
+## Did you know?
+
+One of the largest place-based programs in U.S. history was the Tennessee Valley Authority, created in 1933 during the New Deal to build dams, bring electricity, and develop industry across one of the country's poorest regions. Economists still study it to learn whether a large, temporary push can permanently change a region's economy.
+
+## Practice questions
+
+1. Explain the difference between people-based and place-based policy, and give an example of each.
+2. Explain the local multiplier and why it depends on whether a job is tradable.
+3. Why might the benefits of a place-based subsidy end up with landowners rather than workers?

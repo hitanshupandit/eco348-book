@@ -1,0 +1,119 @@
+---
+title: "Owning versus Renting"
+subtitle: "Week 6 · The user cost of housing and the tax code"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** Brueckner, Chapter 6; @painter2001.
+:::
+
+## The model
+
+Should you buy a home or rent one? The sticker price of a house is the wrong comparison. What matters is the **annual cost of owning**, called the **user cost**, compared with a year's rent for a similar home.
+
+### The user cost of owning
+
+Owning a home worth $V$ for a year costs you:
+
+- **Interest** on the money tied up in the home, $iV$, whether it is paid to a bank on a mortgage or forgone on your own savings;
+- **Property tax**, $pV$;
+- **Maintenance and depreciation**, $dV$;
+
+minus
+
+- **Expected appreciation**, $gV$, the gain if the home's value rises.
+
+Without taxes, the user cost is $(i + p + d - g)V$.
+
+### Where the tax code comes in
+
+The U.S. income tax treats owners and renters differently. A landlord pays income tax on rent received; an owner-occupier pays no tax on the housing services they "rent to themselves." Owners who itemize can also deduct mortgage interest and property taxes. For a household with marginal tax rate $\tau$ that itemizes,
+
+$$
+\text{user cost} = \big[(1 - \tau)(i + p) + d - g\big] V.
+$$
+
+The deductions are worth more to households in higher tax brackets, so **higher-income households face a lower cost of owning** and are more likely to own. Households that expect to move soon tend to rent, because buying and selling a home is expensive.
+
+## Simulation
+
+Compare the yearly cost of owning with the yearly rent for a similar home.
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof V = Inputs.range([150000, 800000], {value: 350000, step: 5000, label: "Home price, V ($)"})
+viewof rent = Inputs.range([6000, 48000], {value: 19200, step: 600, label: "Rent for a similar home ($ per yr)"})
+viewof iRate = Inputs.range([2, 9], {value: 6.5, step: 0.1, label: "Interest rate, i (%)"})
+viewof pRate = Inputs.range([0.5, 3], {value: 1.4, step: 0.1, label: "Property tax rate, p (%)"})
+viewof dRate = Inputs.range([0.5, 4], {value: 2, step: 0.1, label: "Maintenance and depreciation, d (%)"})
+viewof gRate = Inputs.range([-3, 8], {value: 3, step: 0.1, label: "Expected appreciation, g (%)"})
+viewof tau = Inputs.range([0, 40], {value: 24, step: 1, label: "Marginal income tax rate, τ (%)"})
+viewof itemize = Inputs.toggle({label: "Itemizes deductions", value: false})
+```
+
+```{ojs}
+//| code-fold: true
+userCost = (taxRate) => {
+  const s = itemize ? taxRate / 100 : 0;      // deductions only help if you itemize
+  return ((1 - s) * (iRate + pRate) / 100 + dRate / 100 - gRate / 100) * V;
+}
+uc = userCost(tau)
+Plot.plot({
+  height: 300, marginLeft: 60,
+  x: {label: "Marginal income tax rate, τ (%) →", domain: [0, 40]},
+  y: {label: "↑ Dollars per year", grid: true, zero: true},
+  color: {legend: true, domain: ["User cost of owning", "Rent"], range: ["#881124", "#2b6cb0"]},
+  marks: [
+    Plot.line(d3.range(0, 40.5, 0.5), {x: d => d, y: userCost, stroke: () => "User cost of owning", strokeWidth: 3}),
+    Plot.ruleY([rent], {stroke: () => "Rent", strokeWidth: 2, strokeDasharray: "5,4"}),
+    Plot.dot([{x: tau, y: uc}], {x: "x", y: "y", r: 6, fill: "#881124"})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+fd = d3.format(",.0f")
+html`<table class="table table-sm readout"><tbody>
+  <tr><td>Yearly cost of owning</td><td>$${fd(uc)}</td></tr>
+  <tr><td>Yearly rent</td><td>$${fd(rent)}</td></tr>
+  <tr><td>Cheaper option this year</td><td><strong>${uc < rent ? "Own" : "Rent"}</strong> (by $${fd(Math.abs(rent - uc))})</td></tr>
+  <tr><td>Price-to-rent ratio, V / rent</td><td>${(V / rent).toFixed(1)}</td></tr>
+</tbody></table>`
+```
+:::
+
+The simulation leaves out the costs of buying and selling, the down payment, and the details of current tax law, all of which matter for a real decision.
+
+### Things to try
+
+1. Turn **itemizing on**. How does the cost of owning change as the tax rate rises? Why is the line flat when itemizing is off?
+2. Lower **expected appreciation** $g$ to 0. Does owning still beat renting? What does this say about buying in a market people expect to cool?
+3. Raise the **interest rate** from 3% to 7%. How much more does owning cost each year?
+4. Find the rent at which you would be indifferent between owning and renting. How does it compare with the common rule of thumb that buying makes sense when the price-to-rent ratio is low?
+
+## What the evidence says
+
+Homeownership rates differ widely across groups. @painter2001 use household data from Los Angeles to ask how much of the gaps across racial, ethnic, and immigrant groups can be explained by differences in income, household characteristics, and, for immigrants, how long they have lived in the United States. Read the paper with this question in mind: how much of each gap do these factors explain, and what might any remaining gap reflect? Possibilities include access to credit, discrimination, and differences in preferences, and each points to a different policy response.
+
+## Closer to home
+
+- Portland and Lewiston have very different price-to-rent ratios. Look up typical home values and rents in each. In which city does owning look cheaper relative to renting?
+- Bates students rent. Why does it almost never make sense to buy a home you will live in for four years?
+
+::: {.network-lens}
+### Network lens: your friends' housing markets
+
+Expected appreciation $g$ is a belief, and beliefs spread through social networks. @bailey2018housing link Facebook friendship networks to housing transactions for Los Angeles residents. People whose friends in other cities had recently seen bigger house-price gains were more likely to buy rather than rent, bought larger homes, and paid more. Because friends live in many different housing markets, these experiences vary for reasons unrelated to the buyer's own neighborhood, which helps the authors separate the effect of friends' experiences from local conditions. In the user-cost formula, the network shifts $g$.
+:::
+
+## Did you know?
+
+The 2017 federal tax law nearly doubled the standard deduction, limited the mortgage interest deduction on new loans, and capped the deduction for state and local taxes. As a result, far fewer households itemize, and for most homeowners the "itemizes deductions" switch in the simulation is now off. Later laws have adjusted some of these limits.
+
+## Practice questions
+
+1. Write down the user cost of owning with and without the tax deductions, and explain each term.
+2. Explain why higher-income households are more likely to own.
+3. Explain how @bailey2018housing separate the effect of friends' experiences from local housing-market conditions.

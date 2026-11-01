@@ -1,0 +1,50 @@
+---
+title: "Urban Economics Lab"
+subtitle: "Interactive notes for ECON 348: Urban Economics · Bates College · Winter 2027"
+toc: false
+---
+
+Why do people pay so much to live close together? Why does rent fall as you move away from downtown? Why does adding highway lanes rarely fix traffic? This site works through the core models of urban economics, one topic per week, and lets you **change the inputs and watch the model respond**.
+
+Each page follows the course schedule and pairs with Jan Brueckner's *Lectures on Urban Economics* [@brueckner2011] and the assigned articles. The pages are meant to be read alongside the textbook, not in place of it.
+
+## How each page works
+
+- **The model.** The economic logic, with the one or two equations you need. This is what you should be able to draw and derive on a midterm.
+- **Simulation.** Sliders that change the model's inputs. The graph and the numbers below it update immediately. Everything runs in your browser; nothing to install.
+- **Things to try.** Short experiments with the simulation, each with a question to answer.
+- **What the evidence says.** What the assigned research finds, and how the authors know.
+- **Closer to home.** Lewiston–Auburn, Portland, and the rest of Maine.
+- **Network lens.** An optional note on how network data and network thinking shed light on the topic.
+- **Did you know?** A short historical or real-world aside.
+
+## Topics
+
+**Why cities exist**
+
+- [Why Cities Exist](why-cities.qmd): agglomeration, spatial equilibrium, and how big a city gets (Week 1)
+- [The Monocentric City](monocentric-city.qmd): rent gradients and the edge of the city (Week 2)
+- [Extending the Model](extending-model.qmd): closed versus open cities, and what remote work does to rents (Week 3)
+
+**Land use and transportation**
+
+- [Sprawl and Land-Use Controls](sprawl.qmd): why market cities can spread out too far (Week 4)
+- [Traffic Congestion](congestion.qmd): congestion tolls and the fundamental law of road congestion (Week 5)
+
+**Housing**
+
+- [Owning versus Renting](tenure-choice.qmd): the user cost of housing and the tax code (Week 6)
+- [Housing Supply and Affordability](housing-supply.qmd): why the same demand boom raises prices in some cities and building in others (Week 7)
+- [Housing Policy](housing-policy.qmd): rent control and vouchers (Week 8)
+
+**Local government and quality of life**
+
+- [Local Public Goods and Neighborhoods](neighborhoods.qmd): Tiebout sorting and capitalization (Week 9)
+- [Pollution and Crime](pollution-crime.qmd): Pigouvian taxes, Coase, and social multipliers (Week 10)
+- [Measuring Quality of Life](quality-of-life.qmd): what wages and rents reveal about amenities (Week 11)
+- [Place-Based Policy](place-based.qmd): local multipliers and who gains from helping places (Week 12)
+
+::: {.callout-note}
+## About the numbers
+The simulations use simple versions of the models with made-up but realistic numbers. They are built to show how the models work, not to describe any real city. When a page reports real findings, it cites the research.
+:::

@@ -1,0 +1,144 @@
+---
+title: "The Monocentric City"
+subtitle: "Week 2 · Rent gradients and the edge of the city"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** Brueckner, Chapter 2; @rosenthal2022.
+:::
+
+## The model
+
+Picture a city where every job is downtown, in the **central business district (CBD)**. Everyone earns the same income and commutes to the CBD. Living farther out means a longer, more expensive commute. So why would anyone live far away? Because housing is cheaper there. This trade-off between commuting cost and housing cost is the heart of the **Alonso–Muth–Mills model**.
+
+### The rent gradient
+
+Keep it simple: every household lives on one lot of the same size. A household at distance $x$ miles from the CBD earns income $y$, pays rent $r(x)$ for its lot, pays commuting cost $t$ per mile per year, and spends what is left, $c$, on everything else:
+
+$$
+c = y - t\,x - r(x).
+$$
+
+If households could be better off at one location than another, they would move there and bid up its rent. So in equilibrium, **everyone gets the same $c$**, wherever they live. Rearranging:
+
+$$
+r(x) = y - t\,x - c.
+$$
+
+Rent falls by exactly $t$ for every extra mile. Being one mile closer to the CBD saves $t$ in commuting, and landlords capture that saving in rent. The downward-sloping line is the **rent gradient**.
+
+### The edge of the city
+
+The city stops where urban rent falls to what the land would earn in farming, the agricultural rent $r_A$. Call that distance $\bar{x}$. If the city has $N$ households and $D$ lots per square mile, it fills a circle of area $\pi \bar{x}^2$, so
+
+$$
+\bar{x} = \sqrt{\frac{N}{\pi D}}, \qquad r(x) = r_A + t\,(\bar{x} - x).
+$$
+
+Rent at the CBD is $r_A + t\bar{x}$: agricultural rent plus the commuting cost saved by living downtown instead of at the edge.
+
+### Closed and open cities
+
+- In a **closed city**, the population $N$ is fixed. Changes show up in residents' consumption $c$.
+- In an **open city**, people can move in or out freely, so $c$ is pinned to what they could get elsewhere. Changes show up in population and in the city's size.
+
+The full Brueckner model also lets households choose how much space to use. Then dwellings are smaller and buildings taller near the CBD, and the rent curve bends instead of being a straight line. The fixed-lot version here keeps the arithmetic simple while preserving the key logic.
+
+## Simulation
+
+Change the inputs and watch the rent gradient respond. The dashed grey line shows the starting city so you can compare.
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof mode = Inputs.radio(["Closed city", "Open city"], {value: "Closed city", label: "City type"})
+viewof y = Inputs.range([30000, 120000], {value: 60000, step: 1000, label: "Income, y ($/yr)"})
+viewof t = Inputs.range([500, 4000], {value: 1500, step: 50, label: "Commuting cost, t ($ per mile per yr)"})
+viewof rA = Inputs.range([0, 10000], {value: 3000, step: 250, label: "Agricultural rent, rA ($ per lot per yr)"})
+viewof N = Inputs.range([10, 500], {value: 150, step: 5, label: "Population, N (thousand households; closed city only)"})
+viewof D = Inputs.range([1000, 8000], {value: 4000, step: 250, label: "Density, D (lots per sq. mile)"})
+viewof cbar = Inputs.range([20000, 80000], {value: 51800, step: 100, label: "Outside option, c̄ ($/yr, open city only)"})
+```
+
+```{ojs}
+//| code-fold: true
+// Solve the city. Closed: N fixed, c adjusts. Open: c fixed at cbar, N adjusts.
+function solve(p) {
+  if (p.mode === "Closed city") {
+    const xbar = Math.sqrt(p.N * 1000 / (Math.PI * p.D));
+    const c = p.y - p.t * xbar - p.rA;
+    return {xbar, c, N: p.N, viable: c > 0};
+  }
+  const xbar = Math.max((p.y - p.cbar - p.rA) / p.t, 0);
+  const Nk = Math.PI * p.D * xbar * xbar / 1000;
+  return {xbar, c: p.cbar, N: Nk, viable: xbar > 0};
+}
+base = solve({mode, y: 60000, t: 1500, rA: 3000, N: 150, D: 4000, cbar: 51800})
+city = solve({mode, y, t, rA, N, D, cbar})
+xmax = Math.max(base.xbar, city.xbar, 1) * 1.15
+curve = (s, tt, ra) => d3.range(0, xmax, xmax / 200).map(x => ({x, r: x <= s.xbar ? ra + tt * (s.xbar - x) : ra}))
+Plot.plot({
+  height: 340, marginLeft: 70,
+  x: {label: "Distance from the CBD (miles) →", domain: [0, xmax]},
+  y: {label: "↑ Rent ($ per lot per year)", grid: true, zero: true},
+  marks: [
+    Plot.line(curve(base, 1500, 3000), {x: "x", y: "r", stroke: "#999", strokeDasharray: "5,4"}),
+    Plot.line(curve(city, t, rA), {x: "x", y: "r", stroke: "#881124", strokeWidth: 3}),
+    Plot.ruleX([city.xbar], {stroke: "#881124", strokeOpacity: 0.4}),
+    Plot.text([{x: city.xbar, r: rA}], {x: "x", y: "r", text: d => " edge", dy: -10, textAnchor: "start", fill: "#881124"})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+fmt = d3.format(",.0f")
+html`${!city.viable ? html`<p><strong>This city is not viable:</strong> residents would have nothing left after rent and commuting. Lower the population or commuting cost, or raise income.</p>` : ""}
+<table class="table table-sm readout">
+  <thead><tr><th></th><th>Starting city</th><th>Your city</th></tr></thead>
+  <tbody>
+    <tr><td>City radius x̄ (miles)</td><td>${base.xbar.toFixed(2)}</td><td>${city.xbar.toFixed(2)}</td></tr>
+    <tr><td>Population (thousand households)</td><td>${fmt(base.N)}</td><td>${fmt(city.N)}</td></tr>
+    <tr><td>Rent at the CBD ($ per lot per year)</td><td>${fmt(3000 + 1500 * base.xbar)}</td><td>${fmt(rA + t * city.xbar)}</td></tr>
+    <tr><td>Residents' other spending, c ($ per year)</td><td>${fmt(base.c)}</td><td>${fmt(city.c)}</td></tr>
+  </tbody>
+</table>`
+```
+:::
+
+### Things to try
+
+1. **Raise commuting cost** $t$ in a closed city. Which way does the rent line rotate? Why does rent rise downtown but not at the edge? Who pays for the higher commuting cost: residents or landowners?
+2. Make the same change in an **open city**. Now what happens to the city's radius and population? Who bears the cost this time?
+3. **Raise income** $y$ in each type of city. In which case does rent change, and in which does $c$ change?
+4. **Raise population** $N$ in a closed city. Why does the whole rent line shift up?
+5. **Raise density** $D$. What happens to the radius and to rent at the CBD? What kinds of policies change $D$ in real cities?
+
+## What the evidence says
+
+The model's central prediction, that land and housing are most expensive near the center and cheaper farther out, holds in most cities. The interesting questions are how steep the gradient is and how it changes.
+
+@rosenthal2022 ask whether COVID-19 made city centers less valuable for businesses. Using commercial real estate rents, they find that the rent premium for dense, central locations fell after the pandemic began, especially in cities where many workers commute by public transit. In model terms, the value of being close to the center declined. Whether that change is permanent is still an open question, and we return to it with remote work in [Extending the Model](extending-model.qmd).
+
+## Closer to home
+
+Portland's peninsula is the closest thing in Maine to a classic CBD: offices, the port, and many restaurants are packed into a small area, and the Casco Bay coastline limits how far the center can spread.
+
+- If you looked up rents on the peninsula and in towns at increasing distance (South Portland, Westbrook, Gorham, and beyond), would you expect a clean gradient? What else besides commuting distance might affect rents?
+- Lewiston–Auburn has two downtowns facing each other across the Androscoggin River. How well does a single-center model describe it?
+
+::: {.network-lens}
+### Network lens: where you live shapes where you work
+
+The model treats the commute as a cost of distance. But location also determines who your neighbors are, and neighbors pass along job leads. Using Boston-area census data, @bayer2008 compare people living on the same city block with people living on nearby blocks in the same small area. People on the same block are more likely to work at the same place, consistent with informal job referrals among neighbors. A residential location is not just a point on a rent gradient; it is also a position in a social network.
+:::
+
+## Did you know?
+
+The rent gradient is older than the city model. In 1826 the German economist Johann Heinrich von Thünen showed that farmland closer to a market town earns higher rent because crops cost less to haul there. William Alonso adapted the idea to households commuting to downtown jobs in his 1964 book *Location and Land Use*, and Richard Muth and Edwin Mills developed it further. That is why the model carries their three names.
+
+## Practice questions
+
+1. Write down the household budget at distance $x$ and explain why $c$ must be the same at every location. Use this to derive the rent gradient.
+2. In a closed city, commuting cost rises. Using a graph, show what happens to rent at the CBD and at the edge. Who gains and who loses?
+3. Repeat question 2 for an open city. Why does the answer change?

@@ -1,0 +1,115 @@
+---
+title: "Housing Policy"
+subtitle: "Week 8 · Rent control and housing vouchers"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** Brueckner, Chapter 7; @ellen2020; @diamond2019.
+:::
+
+## The model
+
+Governments help renters in two main ways: by **limiting rents** and by **paying part of the rent**. Simple economics gives sharp predictions about both, and recent research adds important nuance.
+
+### Rent control
+
+A rent ceiling below the market rent has three effects in the basic supply-and-demand model:
+
+- **A shortage.** At the lower rent, more people want apartments and landlords offer fewer.
+- **A transfer.** Tenants who keep a controlled apartment pay less; that money comes out of landlords' pockets.
+- **A deadweight loss.** Apartments that renters value more than they cost to supply are no longer offered.
+
+Because price no longer rations apartments, something else does: waiting lists, connections, or lower maintenance. Tenants also stay put longer, since leaving means losing the controlled rent.
+
+### Vouchers versus public housing
+
+A **housing voucher** pays part of a family's rent in a private apartment of their choosing. **Public housing** offers a specific unit. In a budget-constraint diagram, a voucher shifts the budget line out, while public housing offers one fixed bundle on that same line. So a family is **at least as well off with a voucher** of equal cost, and usually better off, because it can choose. Governments may still prefer in-kind help to make sure aid is spent on housing or to add housing where it is scarce.
+
+## Simulation
+
+Quantity is in thousands of apartments, rent in dollars per month. The starting values match Problem B1 on Midterm 2.
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof ceiling = Inputs.range([500, 1200], {value: 800, step: 10, label: "Rent ceiling ($ per month)"})
+viewof dInt = Inputs.range([60, 140], {value: 100, step: 1, label: "Demand: Qd = intercept − 0.04 P. Intercept"})
+viewof sSlope = Inputs.range([0.02, 0.2], {value: 0.08, step: 0.005, label: "Supply: Qs = −20 + slope × P. Slope"})
+```
+
+```{ojs}
+//| code-fold: true
+Pe = (dInt + 20) / (0.04 + sSlope)          // market rent
+Qe = dInt - 0.04 * Pe
+binding = ceiling < Pe
+Qs = binding ? Math.max(-20 + sSlope * ceiling, 0) : Qe
+Qd = binding ? dInt - 0.04 * ceiling : Qe
+PdAtQs = (dInt - Qs) / 0.04                 // what renters would pay for the last apartment supplied
+PsAtQs = (Qs + 20) / sSlope                 // what it costs landlords to supply it
+dwlRC = binding ? 0.5 * (Qe - Qs) * (PdAtQs - PsAtQs) : 0
+transfer = binding ? (Pe - ceiling) * Qs : 0
+Qgrid = d3.range(0, dInt, dInt / 200)
+Plot.plot({
+  height: 340, marginLeft: 60,
+  x: {label: "Apartments (thousands) →", domain: [0, dInt]},
+  y: {label: "↑ Rent ($ per month)", domain: [0, Math.min(dInt / 0.04, Pe * 2.2)], grid: true},
+  color: {legend: true, domain: ["Demand", "Supply", "Rent ceiling"], range: ["#333", "#2b6cb0", "#881124"]},
+  marks: [
+    binding ? Plot.areaY(d3.range(Qs, Qe, (Qe - Qs) / 50).concat([Qe]), {x: q => q, y1: q => (q + 20) / sSlope, y2: q => (dInt - q) / 0.04, fill: "#881124", fillOpacity: 0.15}) : null,
+    Plot.line(Qgrid, {x: q => q, y: q => (dInt - q) / 0.04, stroke: () => "Demand", strokeWidth: 2}),
+    Plot.line(Qgrid, {x: q => q, y: q => (q + 20) / sSlope, stroke: () => "Supply", strokeWidth: 2}),
+    Plot.ruleY([ceiling], {stroke: () => "Rent ceiling", strokeWidth: 2, strokeDasharray: "6,4"}),
+    Plot.dot([{q: Qe, p: Pe}], {x: "q", y: "p", r: 5, fill: "black"})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+fr = d3.format(",.1f")
+fm = d3.format(",.0f")
+html`${binding ? "" : html`<p><strong>The ceiling is above the market rent, so it has no effect.</strong></p>`}
+<table class="table table-sm readout"><tbody>
+  <tr><td>Market rent and quantity</td><td>$${fm(Pe)}, ${fr(Qe)} thousand</td></tr>
+  <tr><td>Apartments supplied at the ceiling</td><td>${fr(Qs)} thousand</td></tr>
+  <tr><td>Apartments demanded at the ceiling</td><td>${fr(Qd)} thousand</td></tr>
+  <tr><td>Shortage</td><td>${fr(Qd - Qs)} thousand</td></tr>
+  <tr><td>Monthly transfer from landlords to tenants who keep units</td><td>$${fr(transfer / 1000)} million</td></tr>
+  <tr><td>Deadweight loss (per month, shaded)</td><td>$${fr(dwlRC / 1000)} million</td></tr>
+</tbody></table>`
+```
+:::
+
+### Things to try
+
+1. With the starting values, confirm the midterm answers: market rent \$1,000, 44 thousand apartments supplied and 68 thousand demanded at \$800, and a deadweight loss of \$4.8 million per month.
+2. **Lower the ceiling** step by step. Which grows faster: the transfer to tenants or the deadweight loss?
+3. **Make supply more elastic** (raise the slope). Is rent control more or less costly when landlords can easily convert or withdraw units? Connect this to the San Francisco evidence below.
+4. Raise demand (the intercept), as in a booming city, with the ceiling fixed. What happens to the shortage?
+
+## What the evidence says
+
+**Rent control in San Francisco.** In 1994, San Francisco extended rent control to small multifamily buildings built before 1980, while similar buildings built after 1980 stayed uncontrolled. @diamond2019 compare the two groups. Tenants in newly covered buildings were much more likely to stay in their homes and in the city, a real benefit the simple model misses. But landlords of covered buildings cut the supply of rental housing by about 15 percent, by converting units to condominiums, moving in themselves, or redeveloping. Less rental housing pushed up rents for everyone else.
+
+**Housing vouchers.** @ellen2020 reviews what we know about the Housing Choice Voucher program. Vouchers reduce homelessness, crowding, and rent burdens. But many voucher holders still live in relatively poor neighborhoods, and only a fraction of eligible families receive a voucher at all. Reforms that help families reach a wider range of neighborhoods are an active area of policy.
+
+## Closer to home
+
+- In 2020, Portland voters approved a rent control ordinance that limits annual rent increases for many apartments. Using the simulation and the San Francisco evidence, what would you predict for Portland's rental supply over the next decade? What would you want to measure?
+- Lewiston has many older multifamily buildings. Would a voucher or rent control do more for low-income renters there? Why?
+
+::: {.network-lens}
+### Network lens: vouchers and social ties
+
+Where a voucher gets used depends on more than rent and housing quality. Families often look for apartments near relatives and friends who help with childcare, transportation, and job leads, and landlords often fill units through word of mouth. A voucher that technically allows a move to a high-opportunity neighborhood may go unused if a family's support network lives elsewhere. Thinking of housing search as moving within a social network helps explain why mobility counseling and landlord outreach can matter as much as the dollar value of the subsidy.
+:::
+
+## Did you know?
+
+The Swedish economist Assar Lindbeck famously quipped that, short of bombing, rent control may be the most efficient way to destroy a city. Economists still largely agree on the supply effects, but the San Francisco evidence shows why the debate continues: rent control also protects incumbent tenants from displacement.
+
+## Practice questions
+
+1. Using a graph, show the shortage, transfer, and deadweight loss from a binding rent ceiling.
+2. What did @diamond2019 find about tenants and about rental supply? How do the findings compare with the simple model?
+3. Using a budget-constraint diagram, explain why a voucher makes a family at least as well off as public housing of equal cost.

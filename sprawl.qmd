@@ -1,0 +1,119 @@
+---
+title: "Sprawl and Land-Use Controls"
+subtitle: "Week 4 · Why market cities can spread out too far"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** Brueckner, Chapter 4; @eid2008.
+:::
+
+## The model
+
+Cities grow outward because, at the edge, land is worth more to a developer than to a farmer. That is efficient **if** prices reflect all costs and benefits. Brueckner identifies three market failures that make the market edge too far out:
+
+1. **Unvalued open space.** Farmland and woods at the fringe give nearby residents views, recreation, and habitat. The farmer's rent $r_A$ leaves this out, so land is converted too cheaply.
+2. **Unpriced congestion.** Drivers do not pay for the delay they impose on others ([Traffic Congestion](congestion.qmd)). Commuting feels cheaper than it really is, so people live too far out.
+3. **Unpaid infrastructure costs.** New subdivisions often pay the average cost of roads, pipes, and schools rather than the higher marginal cost of serving the fringe.
+
+### Market edge versus efficient edge
+
+Take an open city where residents earn $y$, enjoy consumption $\bar{c}$ set by the outside option, and pay commuting cost $t$ per mile. Urban land at distance $x$ rents for $r(x) = y - \bar{c} - t x$, and the market city stops where this falls to $r_A$:
+
+$$
+\bar{x}_{\text{market}} = \frac{y - \bar{c} - r_A}{t}.
+$$
+
+Now count the **social** costs: each mile of commuting also imposes a congestion cost $e$ on others, and each lot of farmland has an open-space value $v$. The efficient edge is where the social value of urban land equals the social value of farmland:
+
+$$
+\bar{x}_{\text{efficient}} = \frac{y - \bar{c} - r_A - v}{t + e}.
+$$
+
+Both corrections pull the efficient edge inward. The gap is **excess sprawl**.
+
+### Fixing it
+
+The best remedy targets the failure directly: a **congestion toll** for unpriced driving, an **open-space or development tax** (or public purchase of land) for lost open space, and **impact fees** for infrastructure. A blunter tool is an **urban growth boundary**, which caps the edge directly but does not distinguish among the reasons for sprawl.
+
+## Simulation
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof tS = Inputs.range([500, 3000], {value: 1500, step: 50, label: "Commuting cost drivers pay, t ($ per mile per yr)"})
+viewof e = Inputs.range([0, 1500], {value: 300, step: 50, label: "Unpriced congestion cost, e ($ per mile per yr)"})
+viewof v = Inputs.range([0, 4000], {value: 1000, step: 100, label: "Open-space value of farmland, v ($ per lot per yr)"})
+viewof netY = Inputs.range([5000, 20000], {value: 9000, step: 250, label: "Income left for land, y − c̄ − rA ($ per lot per yr)"})
+```
+
+```{ojs}
+//| code-fold: true
+// Measure rents relative to agricultural rent: market land value above farming = netY - t*x.
+xMarket = netY / tS
+xEff = Math.max((netY - v) / (tS + e), 0)
+excess = xMarket - xEff
+area = r => Math.PI * r * r
+xmaxS = xMarket * 1.2
+rowsS = d3.range(0, xmaxS, xmaxS / 200)
+Plot.plot({
+  height: 340, marginLeft: 70,
+  x: {label: "Distance from the CBD (miles) →", domain: [0, xmaxS]},
+  y: {label: "↑ Value of land in urban use, above farm rent ($)", grid: true},
+  color: {legend: true, domain: ["Private value (what developers see)", "Social value (counts congestion)", "Open-space value v"], range: ["#2b6cb0", "#881124", "#4a7c3a"]},
+  marks: [
+    Plot.ruleY([0]),
+    Plot.line(rowsS, {x: d => d, y: d => netY - tS * d, stroke: () => "Private value (what developers see)", strokeWidth: 2}),
+    Plot.line(rowsS, {x: d => d, y: d => netY - (tS + e) * d, stroke: () => "Social value (counts congestion)", strokeWidth: 2}),
+    Plot.ruleY([v], {stroke: "#4a7c3a", strokeWidth: 2, strokeDasharray: "5,4"}),
+    Plot.ruleX([xMarket], {stroke: "#2b6cb0", strokeOpacity: 0.5}),
+    Plot.ruleX([xEff], {stroke: "#881124", strokeOpacity: 0.5}),
+    Plot.text([{x: xMarket}], {x: "x", y: netY * 0.9, text: () => "market edge", textAnchor: "end", dx: -4}),
+    Plot.text([{x: xEff}], {x: "x", y: netY * 0.8, text: () => "efficient edge", textAnchor: "end", dx: -4})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+html`<table class="table table-sm readout"><tbody>
+  <tr><td>Market edge (miles)</td><td>${xMarket.toFixed(2)}</td></tr>
+  <tr><td>Efficient edge (miles)</td><td>${xEff.toFixed(2)}</td></tr>
+  <tr><td>Excess sprawl (miles)</td><td>${excess.toFixed(2)}</td></tr>
+  <tr><td>Urban land area: market versus efficient (sq. miles)</td><td>${area(xMarket).toFixed(0)} vs ${area(xEff).toFixed(0)}</td></tr>
+  <tr><td>Share of the market city's land that should have stayed open</td><td>${(100 * (1 - area(xEff) / area(xMarket))).toFixed(0)}%</td></tr>
+</tbody></table>`
+```
+:::
+
+### Things to try
+
+1. Set $e = 0$ and $v = 0$. Why do the two edges coincide? What does this say about sprawl when prices are right?
+2. Turn on **only** the congestion externality $e$. How much does the efficient edge move in? Which policy fixes this failure?
+3. Turn on **only** the open-space value $v$. Which policy fixes this one?
+4. Because land area grows with the square of the radius, a small excess in miles can mean a large excess in land. Find settings where excess sprawl is under one mile but more than a quarter of the city's land should have stayed open.
+5. An urban growth boundary set at the efficient edge would stop the sprawl. What would it do to land rents inside the boundary, and who would gain?
+
+## What the evidence says
+
+Critics of sprawl often point to health: people in sprawling neighborhoods drive more, walk less, and are heavier on average. @eid2008 ask whether sprawl **causes** weight gain or whether people who are already prone to it **choose** sprawling neighborhoods. Following the same individuals over time as they move between more and less sprawling places, they find no evidence that sprawl causes weight gain; the correlation reflects sorting. The lesson for policy: the case against sprawl rests on the market failures above, not on health.
+
+## Closer to home
+
+- Maine's 1988 Growth Management Act encourages towns to plan for designated growth areas. Which of the three market failures does growth-area planning address?
+- Picture new subdivisions along the roads out of Lewiston–Auburn or Portland. Who pays for the new roads, school buses, and water lines?
+
+::: {.network-lens}
+### Network lens: highways as spokes of a network
+
+Sprawl follows the transportation network. @baumsnow2007 asks how much of postwar suburbanization was caused by the interstate highway system. Because highways were not built at random, he uses the 1947 national highway plan to predict where highway "rays" would run through central cities. He finds that each additional ray reduced central-city population by roughly 18 percent. In the model, a new highway is a lower $t$ along one spoke of the network, and the city stretches out along it.
+:::
+
+## Did you know?
+
+Oregon's 1973 land-use law required its cities to draw urban growth boundaries, and the Portland, Oregon, metro area adopted its boundary in 1979. It remains the best-known growth boundary in the United States and a common case study in debates over whether boundaries raise housing prices.
+
+## Practice questions
+
+1. Name the three market failures that can cause excessive sprawl, and match each with a policy that targets it.
+2. Using a graph of land value against distance, show the market edge and the efficient edge when there is unpriced congestion.
+3. Explain the identification problem in studying sprawl and obesity, and how @eid2008 address it.

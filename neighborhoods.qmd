@@ -1,0 +1,102 @@
+---
+title: "Local Public Goods and Neighborhoods"
+subtitle: "Week 9 · Tiebout sorting, capitalization, and neighborhood effects"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** Brueckner, Chapter 8; @boustan2013; @chetty2016.
+:::
+
+## The model
+
+Schools, parks, police, and trash pickup are mostly provided by local governments and paid for with local property taxes. Because people can choose where to live, they can also choose their package of public services and taxes.
+
+### Tiebout sorting
+
+Charles Tiebout argued that when there are many towns, households "vote with their feet," sorting into the town whose mix of services and taxes best matches what they want. With enough towns, this can provide local public goods efficiently, something a single national government struggles to do because it cannot easily learn how much each person values them.
+
+The argument needs strong assumptions: many towns to choose among, people who can move easily, no spillovers between towns, and taxes that work like a price for services. **Property taxes** break the last assumption: a family in a small house pays less tax than a neighbor in a large house but uses the same schools. **Zoning**, such as minimum lot sizes, keeps out lower-tax households and restores the link between taxes and services, but at the cost of excluding families with less income.
+
+### Capitalization
+
+If a town's schools are better or its taxes are lower, families bid more for homes there. The advantage gets built into house prices. If a home comes with a benefit worth $B$ dollars per year forever, and buyers discount the future at interest rate $r$, the price premium is
+
+$$
+\Delta P = \frac{B}{r}.
+$$
+
+Capitalization means that whoever owns the home **when the improvement is announced** collects the gain. Later buyers pay for the better schools in the price.
+
+## Simulation
+
+How much is a better school district worth in the price of a home?
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof benefit = Inputs.range([0, 6000], {value: 2000, step: 100, label: "Yearly value of better schools or lower taxes, B ($)"})
+viewof rDisc = Inputs.range([2, 10], {value: 5, step: 0.25, label: "Interest (discount) rate, r (%)"})
+viewof years = Inputs.range([5, 100], {value: 100, step: 5, label: "Years the advantage is expected to last"})
+```
+
+```{ojs}
+//| code-fold: true
+r = rDisc / 100
+pv = n => benefit * (1 - Math.pow(1 + r, -n)) / r        // present value of B per year for n years
+premium = pv(years)
+perpetuity = benefit / r
+Plot.plot({
+  height: 300, marginLeft: 70,
+  x: {label: "Years the advantage lasts →", domain: [0, 100]},
+  y: {label: "↑ Price premium ($)", grid: true, zero: true},
+  marks: [
+    Plot.line(d3.range(0, 101), {x: n => n, y: pv, stroke: "#881124", strokeWidth: 3}),
+    Plot.ruleY([perpetuity], {stroke: "#888", strokeDasharray: "5,4"}),
+    Plot.dot([{n: years, v: premium}], {x: "n", y: "v", r: 6, fill: "#881124"})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+fp = d3.format(",.0f")
+html`<table class="table table-sm readout"><tbody>
+  <tr><td>Price premium for this home</td><td>$${fp(premium)}</td></tr>
+  <tr><td>Premium if the advantage lasts forever, B / r (dashed line)</td><td>$${fp(perpetuity)}</td></tr>
+</tbody></table>`
+```
+:::
+
+### Things to try
+
+1. With $B = \$2{,}000$ and $r = 5\%$, how much more is a home in the better district worth? Who gains when the district first improves?
+2. **Lower the interest rate.** Why do capitalized premiums get larger when rates fall?
+3. Suppose people expect the advantage to last only **15 years** (for example, a temporary tax break). How much smaller is the premium?
+4. A renter moves into the better district after the improvement. Do they get the better schools for free? Who pays?
+
+## What the evidence says
+
+**Paying to live in a richer town.** @boustan2013 compares homes on either side of municipal borders, where neighborhoods look similar but the town differs. Homes on the side of a higher-income town sell for more. She asks how much of that premium reflects local public goods and fiscal advantages, a direct test of Tiebout-style sorting and capitalization.
+
+**Do neighborhoods change children's futures?** In the Moving to Opportunity experiment, families in high-poverty public housing were randomly offered housing vouchers, some of which could be used only in low-poverty neighborhoods. @chetty2016 follow the children into adulthood. Children who moved to lower-poverty neighborhoods when young, before about age 13, had higher earnings and college attendance as adults; those who moved as teenagers did not benefit. The longer a child spends in a better neighborhood, the larger the gain. Because the offers were random, these are causal effects of place.
+
+## Closer to home
+
+- Maine funds schools through a mix of local property taxes and state aid. Look up the school budgets and tax rates of Lewiston, Auburn, and a nearby suburb. What would Tiebout predict about who lives where?
+- Two Maine towns with similar homes have different school ratings. How would you use home sale prices to estimate what families pay for the difference?
+
+::: {.network-lens}
+### Network lens: who you know, not just where you live
+
+Neighborhoods matter partly because of the social networks they create. @chetty2022 use billions of Facebook friendships to measure **economic connectedness**: how many higher-income friends people with lower incomes have. Across U.S. counties and ZIP codes, economic connectedness is the strongest predictor of upward mobility among the social-capital measures they study. These are associations, not causal estimates, but they suggest that part of what Moving to Opportunity changed was the networks children grew up in.
+:::
+
+## Did you know?
+
+Charles Tiebout's 1956 paper was a reply to Paul Samuelson, who had argued in 1954 that markets cannot reveal how much people value public goods. Tiebout's answer, that moving between towns can reveal those values, became one of the most cited ideas in public and urban economics.
+
+## Practice questions
+
+1. State the Tiebout model and its key assumptions. How do property taxes and zoning affect it?
+2. Explain capitalization and use $\Delta P = B/r$ to show who gains when a town's schools improve.
+3. What did @chetty2016 find, and why does random assignment matter for interpreting it?

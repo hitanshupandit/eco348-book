@@ -1,0 +1,53 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Urban Economics Lab"
+  description: "Interactive notes for ECON 348: Urban Economics, Bates College, Winter 2027"
+  page-navigation: true
+  search: true
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - text: "Overview"
+        href: index.qmd
+      - section: "Why Cities Exist"
+        contents:
+          - why-cities.qmd
+          - monocentric-city.qmd
+          - extending-model.qmd
+      - section: "Land Use and Transportation"
+        contents:
+          - sprawl.qmd
+          - congestion.qmd
+      - section: "Housing"
+        contents:
+          - tenure-choice.qmd
+          - housing-supply.qmd
+          - housing-policy.qmd
+      - section: "Local Government and Quality of Life"
+        contents:
+          - neighborhoods.qmd
+          - pollution-crime.qmd
+          - quality-of-life.qmd
+          - place-based.qmd
+      - text: "References"
+        href: references.qmd
+  page-footer:
+    center: "ECON 348 · Bates College · Hitanshu Pandit · Written in Markdown and rendered with Quarto"
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-title: "On this page"
+    html-math-method: mathjax
+    code-fold: true
+    code-summary: "Show the simulation code"
+    reference-location: margin
+    citation-location: document

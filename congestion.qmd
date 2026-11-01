@@ -1,0 +1,133 @@
+---
+title: "Traffic Congestion"
+subtitle: "Week 5 · Congestion tolls and the fundamental law of road congestion"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** Brueckner, Chapter 5; @duranton2011; @tarduno2021.
+:::
+
+## The model
+
+Every driver who enters a crowded highway slows down everyone else a little. No single driver notices the few seconds they add to each other car's trip, but across thousands of cars those seconds add up. That ignored cost is a classic **externality**, and it is why rush-hour traffic is worse than it should be.
+
+### Average cost versus marginal cost
+
+Let $T$ be the number of cars per hour. The cost of a trip to each driver, time plus operating cost, rises with traffic:
+
+$$
+AC(T) = a + bT.
+$$
+
+The total cost of all trips is $T \cdot AC(T) = aT + bT^2$, so the **marginal social cost** of one more car is
+
+$$
+MC(T) = a + 2bT.
+$$
+
+The gap, $MC - AC = bT$, is the delay the extra car imposes on everyone else.
+
+### Two equilibria
+
+Drivers' willingness to pay for a trip is the demand curve, $MB(T) = \alpha - \beta T$.
+
+- **Without a toll**, drivers keep entering until the benefit of the last trip equals the cost *they* pay: $MB = AC$. Too many people drive.
+- **The efficient level** sets benefit equal to the full social cost: $MB = MC$.
+
+A **congestion toll** equal to $bT^*$, the external cost at the efficient level of traffic, closes the gap. Drivers then face $AC + \text{toll} = MC$, and traffic falls to $T^*$. The **deadweight loss** of having no toll is the triangle between $MC$ and $MB$ from $T^*$ to the unpriced level of traffic.
+
+## Simulation
+
+The starting values match Problem B2 on Midterm 1. The **road capacity** slider shows what happens when you add lanes instead of charging a toll.
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof a = Inputs.range([5, 20], {value: 10, step: 0.5, label: "Free-flow cost, a ($)"})
+viewof b = Inputs.range([0.001, 0.005], {value: 0.002, step: 0.0001, label: "Congestion slope, b"})
+viewof alpha = Inputs.range([30, 80], {value: 50, step: 1, label: "Demand intercept, α ($)"})
+viewof beta = Inputs.range([0.002, 0.012], {value: 0.006, step: 0.0005, label: "Demand slope, β"})
+viewof cap = Inputs.range([1, 3], {value: 1, step: 0.1, label: "Road capacity (× today's lanes)"})
+```
+
+```{ojs}
+//| code-fold: true
+// Adding capacity spreads the same traffic over more lanes, so congestion per car falls: b_eff = b / capacity.
+be = b / cap
+T0 = (alpha - a) / (be + beta)          // unpriced: MB = AC
+Ts = (alpha - a) / (2 * be + beta)      // efficient: MB = MC
+toll = be * Ts
+dwl = 0.5 * (T0 - Ts) * (be * T0)       // gap between MC and MB at T0 equals b*T0
+Tmax = alpha / beta
+pts = d3.range(0, Tmax, Tmax / 200)
+Plot.plot({
+  height: 360, marginLeft: 50,
+  x: {label: "Cars per hour, T →", domain: [0, Tmax]},
+  y: {label: "↑ Dollars per trip", domain: [0, Math.max(alpha, a + 2 * be * T0) * 1.05], grid: true},
+  color: {legend: true, domain: ["Demand (MB)", "Average cost (AC)", "Marginal social cost (MC)"], range: ["#333", "#2b6cb0", "#881124"]},
+  marks: [
+    Plot.areaY(d3.range(Ts, T0, (T0 - Ts) / 50).concat([T0]), {x: d => d, y1: d => alpha - beta * d, y2: d => a + 2 * be * d, fill: "#881124", fillOpacity: 0.15}),
+    Plot.line(pts, {x: d => d, y: d => alpha - beta * d, stroke: () => "Demand (MB)", strokeWidth: 2}),
+    Plot.line(pts, {x: d => d, y: d => a + be * d, stroke: () => "Average cost (AC)", strokeWidth: 2}),
+    Plot.line(pts, {x: d => d, y: d => a + 2 * be * d, stroke: () => "Marginal social cost (MC)", strokeWidth: 2}),
+    Plot.dot([{T: T0, p: a + be * T0}, {T: Ts, p: alpha - beta * Ts}], {x: "T", y: "p", r: 5, fill: "black"}),
+    Plot.text([{T: T0, p: a + be * T0, l: "No toll"}, {T: Ts, p: alpha - beta * Ts, l: "Efficient"}], {x: "T", y: "p", text: "l", dy: -12})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+f0 = d3.format(",.0f")
+f2 = d3.format(",.2f")
+html`<table class="table table-sm readout">
+  <tbody>
+    <tr><td>Traffic with no toll (cars per hour)</td><td>${f0(T0)}</td></tr>
+    <tr><td>Cost per trip with no toll</td><td>$${f2(a + be * T0)}</td></tr>
+    <tr><td>Efficient traffic (cars per hour)</td><td>${f0(Ts)}</td></tr>
+    <tr><td>Congestion toll</td><td>$${f2(toll)}</td></tr>
+    <tr><td>Toll revenue (per hour)</td><td>$${f0(toll * Ts)}</td></tr>
+    <tr><td>Deadweight loss with no toll (per hour, shaded)</td><td>$${f0(dwl)}</td></tr>
+  </tbody>
+</table>`
+```
+:::
+
+### Things to try
+
+1. With the starting values, confirm the midterm answers: 5,000 cars without a toll, 4,000 with a toll of \$8, and a deadweight loss of \$5,000 per hour.
+2. **Make demand more elastic** by lowering the demand slope $\beta$. Does the toll reduce traffic by more or less? Why does the deadweight loss change?
+3. **Raise the congestion slope** $b$. What happens to the toll and to the deadweight loss? What kinds of roads have a steep $b$?
+4. **Double road capacity** (set it to 2) without a toll. How much does traffic grow, and how much does the cost per trip fall? Compare with the **fundamental law** below.
+5. Drivers who stay on the road after the toll pay the toll *and* enjoy a faster trip. With the starting values, compare their full cost per trip with and without the toll. Are they better or worse off before the toll revenue is spent?
+
+## What the evidence says
+
+**New lanes fill up.** @duranton2011 find that vehicle-kilometers traveled in U.S. metro areas rise roughly one-for-one with lane-kilometers of interstate highway. When capacity grows, residents drive more, trucks and businesses use the roads more, and people move in. In the simulation, adding capacity lowers the cost curves, and traffic grows along the demand curve. The more elastic demand is, the more the new capacity fills up and the less travel times improve.
+
+**Ride-hailing adds traffic.** @tarduno2021 uses the temporary exit of Uber and Lyft from Austin, Texas, in 2016 as a natural experiment and finds that traffic volumes fell after they left. Ride-hailing trips impose the same unpriced delay on other drivers as any other car.
+
+The policy lesson from both papers: **pricing** the road changes behavior; adding capacity alone mostly invites more driving.
+
+## Closer to home
+
+Maine's congestion is modest by big-city standards, but it is concentrated: Portland's peninsula at rush hour, the bridges between Lewiston and Auburn, and the Maine Turnpike on summer weekends.
+
+- The Maine Turnpike already charges tolls. Are they congestion tolls? What would a congestion toll on a summer Friday afternoon look like?
+- Suppose Lewiston proposes widening a busy downtown street. Using the fundamental law, what would you expect to happen to traffic two or three years later?
+
+::: {.network-lens}
+### Network lens: roads are a network, not a single road
+
+The model above looks at one road. Real trips run through a **network** of roads, and drivers switch routes when one gets crowded. Widening one road pulls traffic away from others, so part of the benefit shows up elsewhere in the network, and part disappears as the widened road fills up. @allen2022 build a model of route choice on the U.S. interstate system and on Seattle's roads and find that the returns to improving individual road segments vary widely; accounting for congestion and rerouting changes which projects look best. A famous network puzzle, Braess's paradox, shows that adding a road can even make everyone's trip slower.
+:::
+
+## Did you know?
+
+Economist William Vickrey argued for road pricing beginning in the 1950s and 1960s, and later shared the 1996 Nobel Prize in economics. His ideas took decades to reach the street. Singapore began charging drivers to enter its downtown in 1975. London introduced a congestion charge in 2003, and Stockholm adopted one permanently in 2007 after a trial. In January 2025, New York City became the first U.S. city to charge drivers to enter its central business district.
+
+## Practice questions
+
+1. Derive the marginal social cost of a trip from $AC(T) = a + bT$. Explain in words why $MC > AC$.
+2. Using a graph, show the unpriced equilibrium, the efficient level of traffic, the toll, and the deadweight loss.
+3. Explain the fundamental law of road congestion and what it implies for a proposal to widen a congested highway.

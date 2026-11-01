@@ -1,0 +1,977 @@
+[
+  {
+    "objectID": "extending-model.html",
+    "href": "extending-model.html",
+    "title": "Extending the Model",
+    "section": "",
+    "text": "Read: Brueckner, Chapter 3; Gupta et al. (2022).",
+    "crumbs": [
+      "Why Cities Exist",
+      "Extending the Model"
+    ]
+  },
+  {
+    "objectID": "extending-model.html#the-model",
+    "href": "extending-model.html#the-model",
+    "title": "Extending the Model",
+    "section": "The model",
+    "text": "The model\nThe monocentric city gives us a rent gradient. This week we ask how it changes when something in the economy changes: incomes rise, the population grows, or commuting gets cheaper. Economists call this comparative statics.\n\nTwo kinds of cities\nThe answer depends on whether people can move in and out.\n\nIn a closed city, the population is fixed. A change shows up in residents’ well-being (their consumption \\(c\\)) and in rents.\nIn an open city, people move freely, so residents always end up exactly as well off as they could be elsewhere. A change shows up in population and city size, and landowners collect the gains or bear the losses.\n\n\n\nWhat happens when commuting gets cheaper\nWith fixed lot sizes, rent at distance \\(x\\) is \\(r(x) = r_A + t(\\bar{x} - x)\\). Lower \\(t\\), and:\n\nClosed city: the edge \\(\\bar{x}\\) stays put (same people, same lots), the rent line flattens, and rent falls everywhere inside the edge. Residents keep the savings.\nOpen city: residents’ well-being is pinned by the outside option, so CBD rent stays at \\(y - \\bar{c}\\). The flatter line reaches farmland farther out, so the city expands and newcomers move in.\n\nIn Brueckner’s full model, where households also choose how much space to use, cheaper commuting lets people spread out even in a closed city: rents fall near the center and rise toward the edge, and the city grows outward.\n\n\nRemote work as a fall in \\(t\\)\nIf you commute only on the days you go to the office, working from home some days cuts your yearly commuting cost. With \\(d\\) remote days in a five-day week, the effective commuting cost becomes\n\\[\nt_{\\text{eff}} = t \\left(1 - \\frac{d}{5}\\right).\n\\]\nSo the model predicts that remote work flattens the rent gradient: central locations lose some of their premium relative to outlying ones.",
+    "crumbs": [
+      "Why Cities Exist",
+      "Extending the Model"
+    ]
+  },
+  {
+    "objectID": "extending-model.html#simulation",
+    "href": "extending-model.html#simulation",
+    "title": "Extending the Model",
+    "section": "Simulation",
+    "text": "Simulation\n\n\n\nShow the simulation code\nviewof mode2 = Inputs.radio([\"Closed city\", \"Open city\"], {value: \"Closed city\", label: \"City type\"})\nviewof days = Inputs.range([0, 5], {value: 0, step: 0.5, label: \"Remote days per week, d\"})\nviewof t2 = Inputs.range([500, 4000], {value: 1500, step: 50, label: \"Commuting cost on office days, t ($ per mile per yr)\"})\nviewof y2 = Inputs.range([30000, 120000], {value: 60000, step: 1000, label: \"Income, y ($/yr)\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nrA2 = 3000\nxbar0 = Math.sqrt(150000 / (Math.PI * 4000))\ncbar2 = 60000 - 1500 * xbar0 - rA2                 // outside option = starting residents' consumption\nteff = t2 * (1 - days / 5)\nbefore = ({xbar: xbar0, t: 1500, c: cbar2, N: 150})\nafter = {\n  if (mode2 === \"Closed city\") {\n    const c = y2 - teff * xbar0 - rA2;\n    return {xbar: xbar0, t: teff, c, N: 150};\n  }\n  const xbar = teff &gt; 0 ? (y2 - cbar2 - rA2) / teff : Infinity;\n  return {xbar, t: teff, c: cbar2, N: Math.PI * 4000 * xbar * xbar / 1000};\n}\nxmax2 = Math.min(Math.max(before.xbar, isFinite(after.xbar) ? after.xbar : 0) * 1.15, 40)\nline2 = s =&gt; d3.range(0, xmax2, xmax2 / 200).map(x =&gt; ({x, r: x &lt;= s.xbar ? rA2 + s.t * (s.xbar - x) : rA2}))\nPlot.plot({\n  height: 340, marginLeft: 70,\n  x: {label: \"Distance from the CBD (miles) →\", domain: [0, xmax2]},\n  y: {label: \"↑ Rent ($ per lot per year)\", grid: true, zero: true},\n  marks: [\n    Plot.line(line2(before), {x: \"x\", y: \"r\", stroke: \"#999\", strokeDasharray: \"5,4\"}),\n    Plot.line(line2(after), {x: \"x\", y: \"r\", stroke: \"#881124\", strokeWidth: 3})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nf2c = d3.format(\",.0f\")\nhtml`${isFinite(after.xbar) ? \"\" : html`&lt;p&gt;&lt;strong&gt;With no commuting cost at all, an open city has no edge:&lt;/strong&gt; everyone would move in. Set remote days below 5.&lt;/p&gt;`}\n&lt;table class=\"table table-sm readout\"&gt;\n&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;Before (dashed)&lt;/th&gt;&lt;th&gt;After&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;\n&lt;tbody&gt;\n  &lt;tr&gt;&lt;td&gt;Effective commuting cost ($ per mile per yr)&lt;/td&gt;&lt;td&gt;1,500&lt;/td&gt;&lt;td&gt;${f2c(teff)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;City radius (miles)&lt;/td&gt;&lt;td&gt;${before.xbar.toFixed(2)}&lt;/td&gt;&lt;td&gt;${isFinite(after.xbar) ? after.xbar.toFixed(2) : \"unbounded\"}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Population (thousand households)&lt;/td&gt;&lt;td&gt;150&lt;/td&gt;&lt;td&gt;${isFinite(after.N) ? f2c(after.N) : \"unbounded\"}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Rent at the CBD ($ per lot per yr)&lt;/td&gt;&lt;td&gt;${f2c(rA2 + 1500 * before.xbar)}&lt;/td&gt;&lt;td&gt;${isFinite(after.xbar) ? f2c(rA2 + after.t * after.xbar) : \"n/a\"}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Residents' other spending, c ($ per yr)&lt;/td&gt;&lt;td&gt;${f2c(before.c)}&lt;/td&gt;&lt;td&gt;${f2c(after.c)}&lt;/td&gt;&lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThings to try\n\nIn a closed city, move remote days from 0 to 2. Who gains: residents or landowners? By how much does rent at the CBD fall?\nMake the same change in an open city. Why doesn’t CBD rent change? Where do the gains go instead?\nIn an open city, set remote days to 4. How much larger does the city get? Where would the new residents come from in real life?\nRaise income \\(y\\) with no remote work. Compare the closed and open cases.\nPut remote work and a commuting cost increase together (for example, higher gas prices). Can they cancel out?",
+    "crumbs": [
+      "Why Cities Exist",
+      "Extending the Model"
+    ]
+  },
+  {
+    "objectID": "extending-model.html#what-the-evidence-says",
+    "href": "extending-model.html#what-the-evidence-says",
+    "title": "Extending the Model",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nGupta et al. (2022) study U.S. housing markets during the pandemic. They find that house prices and rents fell in city centers relative to the suburbs in large metro areas, so the gradient of prices with distance from the center flattened, and the effect was larger where more jobs could be done remotely. That is exactly the comparative static in the simulation: a lower effective \\(t\\) flattens the gradient. Whether the flattening lasts depends on how much remote work sticks.",
+    "crumbs": [
+      "Why Cities Exist",
+      "Extending the Model"
+    ]
+  },
+  {
+    "objectID": "extending-model.html#closer-to-home",
+    "href": "extending-model.html#closer-to-home",
+    "title": "Extending the Model",
+    "section": "Closer to home",
+    "text": "Closer to home\n\nDuring the pandemic, many remote workers moved to Maine from Boston and New York. In open-city terms, what happened to the “outside option” that Maine towns compete with?\nIf a Portland worker goes to the office two days a week instead of five, how much farther out could they live for the same total commuting cost?\n\n\nNetwork lens: rail networks and the first commuters\nThe same comparative static played out 150 years ago, along a network of rail lines. Heblich et al. (2020) study London in the nineteenth century. As steam railways spread, commuting got much cheaper, and people could live and work in different places for the first time on a large scale. Residents spread outward along the rail network while jobs concentrated in the center, a lower \\(t\\) along the links of a network rather than in every direction at once.",
+    "crumbs": [
+      "Why Cities Exist",
+      "Extending the Model"
+    ]
+  },
+  {
+    "objectID": "extending-model.html#did-you-know",
+    "href": "extending-model.html#did-you-know",
+    "title": "Extending the Model",
+    "section": "Did you know?",
+    "text": "Did you know?\nBefore streetcars and railways, most city residents lived within walking distance of their jobs, and historians call those places “walking cities.” Horse-drawn and then electric streetcars in the late nineteenth century lowered \\(t\\) and produced the first streetcar suburbs, decades before the automobile.",
+    "crumbs": [
+      "Why Cities Exist",
+      "Extending the Model"
+    ]
+  },
+  {
+    "objectID": "extending-model.html#practice-questions",
+    "href": "extending-model.html#practice-questions",
+    "title": "Extending the Model",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nShow graphically what happens to the rent gradient in a closed city when commuting costs fall. Who gains?\nRepeat for an open city. Why do the results differ?\nExplain why remote work acts like a fall in commuting cost, and summarize what Gupta et al. (2022) find.",
+    "crumbs": [
+      "Why Cities Exist",
+      "Extending the Model"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Albouy, David. 2016. “What Are Cities Worth? Land Rents, Local Productivity, and the Total Value of Amenities.” Review of Economics and Statistics 98 (3): 477–87. https://doi.org/10.1162/REST_a_00550.\n\n\nAllen, Treb, and Costas Arkolakis. 2022. “The Welfare Effects of Transportation Infrastructure Improvements.” Review of Economic Studies 89 (6): 2911–57. https://doi.org/10.1093/restud/rdac001.\n\n\nAustin, Benjamin, Edward Glaeser, and Lawrence Summers. 2018. “Jobs for the Heartland: Place-Based Policies in 21st-Century America.” Brookings Papers on Economic Activity 2018 (1): 151–255. https://doi.org/10.1353/eca.2018.0002.\n\n\nBailey, Michael, Rachel Cao, Theresa Kuchler, Johannes Stroebel, and Arlene Wong. 2018. “Social Connectedness: Measurement, Determinants, and Effects.” Journal of Economic Perspectives 32 (3): 259–80. https://doi.org/10.1257/jep.32.3.259.\n\n\nBailey, Michael, Ruiqing Cao, Theresa Kuchler, and Johannes Stroebel. 2018. “The Economic Effects of Social Networks: Evidence from the Housing Market.” Journal of Political Economy 126 (6): 2224–76. https://doi.org/10.1086/700073.\n\n\nBaum-Snow, Nathaniel. 2007. “Did Highways Cause Suburbanization?” Quarterly Journal of Economics 122 (2): 775–805. https://doi.org/10.1162/qjec.122.2.775.\n\n\nBayer, Patrick, Stephen L. Ross, and Giorgio Topa. 2008. “Place of Work and Place of Residence: Informal Hiring Networks and Labor Market Outcomes.” Journal of Political Economy 116 (6): 1150–96. https://doi.org/10.1086/595975.\n\n\nBoustan, Leah Platt. 2013. “Local Public Goods and the Demand for High-Income Municipalities.” Journal of Urban Economics 76: 71–82. https://doi.org/10.1016/j.jue.2013.02.003.\n\n\nBrueckner, Jan K. 2011. Lectures on Urban Economics. MIT Press.\n\n\nChalfin, Aaron, and Justin McCrary. 2017. “Criminal Deterrence: A Review of the Literature.” Journal of Economic Literature 55 (1): 5–48. https://doi.org/10.1257/jel.20141147.\n\n\nChetty, Raj, Nathaniel Hendren, and Lawrence F. Katz. 2016. “The Effects of Exposure to Better Neighborhoods on Children: New Evidence from the Moving to Opportunity Experiment.” American Economic Review 106 (4): 855–902. https://doi.org/10.1257/aer.20150572.\n\n\nChetty, Raj, Matthew O. Jackson, Theresa Kuchler, Johannes Stroebel, Nathaniel Hendren, et al. 2022. “Social Capital I: Measurement and Associations with Economic Mobility.” Nature 608: 108–21. https://doi.org/10.1038/s41586-022-04996-4.\n\n\nCurrie, Janet, Lucas Davis, Michael Greenstone, and Reed Walker. 2015. “Environmental Health Risks and Housing Values: Evidence from 1,600 Toxic Plant Openings and Closings.” American Economic Review 105 (2): 678–709. https://doi.org/10.1257/aer.20121656.\n\n\nDiamond, Rebecca, Tim McQuade, and Franklin Qian. 2019. “The Effects of Rent Control Expansion on Tenants, Landlords, and Inequality: Evidence from San Francisco.” American Economic Review 109 (9): 3365–94. https://doi.org/10.1257/aer.20181289.\n\n\nDuranton, Gilles, and Diego Puga. 2004. “Micro-Foundations of Urban Agglomeration Economies.” In Handbook of Regional and Urban Economics, edited by J. Vernon Henderson and Jacques-François Thisse, vol. 4. Elsevier.\n\n\nDuranton, Gilles, and Matthew A. Turner. 2011. “The Fundamental Law of Road Congestion: Evidence from US Cities.” American Economic Review 101 (6): 2616–52. https://doi.org/10.1257/aer.101.6.2616.\n\n\nEid, Jean, Henry G. Overman, Diego Puga, and Matthew A. Turner. 2008. “Fat City: Questioning the Relationship Between Urban Sprawl and Obesity.” Journal of Urban Economics 63 (2): 385–404. https://doi.org/10.1016/j.jue.2007.12.002.\n\n\nEllen, Ingrid Gould. 2020. “What Do We Know about Housing Choice Vouchers?” Regional Science and Urban Economics 80: 103380. https://doi.org/10.1016/j.regsciurbeco.2018.07.003.\n\n\nGlaeser, Edward L. 1998. “Are Cities Dying?” Journal of Economic Perspectives 12 (2): 139–60. https://doi.org/10.1257/jep.12.2.139.\n\n\nGlaeser, Edward L., and Joshua D. Gottlieb. 2009. “The Wealth of Cities: Agglomeration Economies and Spatial Equilibrium in the United States.” Journal of Economic Literature 47 (4): 983–1028. https://doi.org/10.1257/jel.47.4.983.\n\n\nGlaeser, Edward L., Bruce Sacerdote, and José A. Scheinkman. 1996. “Crime and Social Interactions.” Quarterly Journal of Economics 111 (2): 507–48. https://doi.org/10.2307/2946686.\n\n\nGlaeser, Edward, and Joseph Gyourko. 2018. “The Economic Implications of Housing Supply.” Journal of Economic Perspectives 32 (1): 3–30. https://doi.org/10.1257/jep.32.1.3.\n\n\nGupta, Arpit, Vrinda Mittal, Jonas Peeters, and Stijn Van Nieuwerburgh. 2022. “Flattening the Curve: Pandemic-Induced Revaluation of Urban Real Estate.” Journal of Financial Economics 146 (2): 594–636. https://doi.org/10.1016/j.jfineco.2021.10.008.\n\n\nHeblich, Stephan, Stephen J. Redding, and Daniel M. Sturm. 2020. “The Making of the Modern Metropolis: Evidence from London.” Quarterly Journal of Economics 135 (4): 2059–133. https://doi.org/10.1093/qje/qjaa014.\n\n\nMoretti, Enrico. 2010. “Local Multipliers.” American Economic Review 100 (2): 373–77. https://doi.org/10.1257/aer.100.2.373.\n\n\nPainter, Gary, Stuart Gabriel, and Dowell Myers. 2001. “Race, Immigrant Status, and Housing Tenure Choice.” Journal of Urban Economics 49 (1): 150–67. https://doi.org/10.1006/juec.2000.2188.\n\n\nRoback, Jennifer. 1982. “Wages, Rents, and the Quality of Life.” Journal of Political Economy 90 (6): 1257–78. https://doi.org/10.1086/261120.\n\n\nRosenthal, Stuart S., William C. Strange, and Joaquin A. Urrego. 2022. “JUE Insight: Are City Centers Losing Their Appeal? Commercial Real Estate, Urban Spatial Structure, and COVID-19.” Journal of Urban Economics 127: 103381. https://doi.org/10.1016/j.jue.2021.103381.\n\n\nSaiz, Albert. 2010. “The Geographic Determinants of Housing Supply.” Quarterly Journal of Economics 125 (3): 1253–96. https://doi.org/10.1162/qjec.2010.125.3.1253.\n\n\nTarduno, Matthew. 2021. “The Congestion Costs of Uber and Lyft.” Journal of Urban Economics 122: 103318. https://doi.org/10.1016/j.jue.2020.103318.",
+    "crumbs": [
+      "References"
+    ]
+  },
+  {
+    "objectID": "why-cities.html",
+    "href": "why-cities.html",
+    "title": "Why Cities Exist",
+    "section": "",
+    "text": "Read: Brueckner, Chapter 1; Glaeser (1998); Glaeser and Gottlieb (2009); Bailey et al. (2018).",
+    "crumbs": [
+      "Why Cities Exist",
+      "Why Cities Exist"
+    ]
+  },
+  {
+    "objectID": "why-cities.html#the-model",
+    "href": "why-cities.html#the-model",
+    "title": "Why Cities Exist",
+    "section": "The model",
+    "text": "The model\nRent for a one-bedroom apartment in Boston is far higher than in rural Maine. Commutes are longer, streets are louder, and parking is scarce. Yet roughly four in five Americans live in urban areas. Why do so many people pay more to live close to one another? Because being close to other people and firms makes us more productive and gives us access to things we value.\n\nWhy not spread out?\nIn a world where everyone could produce what they need on their own plot, with no advantage to working at scale, there would be no reason to live near anyone, and land would be cheap everywhere. Cities appear because of two forces:\n\nScale economies. Some goods are much cheaper to make in large plants or offices, so production concentrates in a few places and workers live nearby.\nTransport costs. Moving goods, people, and ideas takes money and time, so it pays to locate near customers, suppliers, ports, and rivers.\n\n\n\nAgglomeration economies\nOnce a city exists, firms become more productive simply because other firms and workers are nearby. These agglomeration economies work through three channels (Duranton and Puga 2004):\n\nSharing: firms share suppliers, infrastructure, and a large pool of workers.\nMatching: a big labor market makes it easier to fit the right worker to each job.\nLearning: ideas spread faster when people meet face to face.\n\nLocalization economies come from many firms in the same industry clustering together; urbanization economies come from the size and variety of the whole city.\n\n\nSpatial equilibrium across cities\nIf big cities make workers more productive, why doesn’t everyone move to the highest-wage city? Because moving bids the advantage away. A worker in city \\(i\\) earns wage \\(w_i\\), pays rent \\(r_i\\), and enjoys amenities worth \\(a_i\\):\n\\[\nV_i = w_i - r_i + a_i = \\bar{V} \\quad \\text{for every city } i.\n\\]\nWith free mobility, utility is the same everywhere for the marginal mover (Roback 1982; Glaeser and Gottlieb 2009). High wages with high rents signal a productive city; high rents with low wages signal valuable amenities.\n\n\nHow big does a city get?\nAgglomeration benefits grow with population, but so do congestion and housing costs. So utility per resident first rises with population, peaks at some size \\(N^*\\), and then falls. People move in as long as the city beats the utility \\(\\bar{u}\\) they could get elsewhere. The simulation shows where that leaves the city.",
+    "crumbs": [
+      "Why Cities Exist",
+      "Why Cities Exist"
+    ]
+  },
+  {
+    "objectID": "why-cities.html#simulation",
+    "href": "why-cities.html#simulation",
+    "title": "Why Cities Exist",
+    "section": "Simulation",
+    "text": "Simulation\nUtility per resident is \\(u(N) = 20 + aN - cN^2\\), where \\(a\\) measures agglomeration benefits and \\(c\\) congestion costs. Population \\(N\\) is in hundreds of thousands.\n\n\n\nShow the simulation code\nviewof aggl = Inputs.range([2, 14], {value: 8, step: 0.5, label: \"Agglomeration benefit, a\"})\nviewof cong = Inputs.range([0.3, 2], {value: 0.8, step: 0.05, label: \"Congestion cost, c\"})\nviewof ubar = Inputs.range([10, 50], {value: 30, step: 0.5, label: \"Utility available elsewhere, ū\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nu = n =&gt; 20 + aggl * n - cong * n * n\nNstar = aggl / (2 * cong)                         // size that maximizes utility per resident\ndisc = aggl * aggl + 4 * cong * (20 - ubar)       // u(N) = ubar is a quadratic in N\nroots = disc &gt;= 0 ? [(aggl - Math.sqrt(disc)) / (2 * cong), (aggl + Math.sqrt(disc)) / (2 * cong)] : []\nstable = roots.length ? roots[1] : NaN\nunstable = roots.length ? Math.max(roots[0], 0) : NaN\nNmax = Math.max(aggl / cong, 2) * 1.05\nPlot.plot({\n  height: 340, marginLeft: 50,\n  x: {label: \"City population, N (hundred thousand) →\", domain: [0, Nmax]},\n  y: {label: \"↑ Utility per resident\", grid: true},\n  marks: [\n    Plot.line(d3.range(0, Nmax, Nmax / 200), {x: d =&gt; d, y: u, stroke: \"#881124\", strokeWidth: 3}),\n    Plot.ruleY([ubar], {stroke: \"#888\", strokeDasharray: \"5,4\"}),\n    Plot.dot([{n: Nstar, v: u(Nstar)}], {x: \"n\", y: \"v\", r: 5, fill: \"black\"}),\n    Plot.text([{n: Nstar, v: u(Nstar)}], {x: \"n\", y: \"v\", text: () =&gt; \"N*\", dy: -12}),\n    roots.length ? Plot.dot([{n: stable, v: ubar}], {x: \"n\", y: \"v\", r: 6, fill: \"#881124\"}) : null,\n    roots.length ? Plot.text([{n: stable, v: ubar}], {x: \"n\", y: \"v\", text: () =&gt; \"stable\", dy: 16}) : null,\n    roots.length && roots[0] &gt; 0 ? Plot.dot([{n: unstable, v: ubar}], {x: \"n\", y: \"v\", r: 5, fill: \"#888\"}) : null\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nhtml`${roots.length ? \"\" : html`&lt;p&gt;&lt;strong&gt;No city forms:&lt;/strong&gt; even at its best size, the city cannot beat the utility available elsewhere.&lt;/p&gt;`}\n&lt;table class=\"table table-sm readout\"&gt;&lt;tbody&gt;\n  &lt;tr&gt;&lt;td&gt;Size that maximizes utility, N*&lt;/td&gt;&lt;td&gt;${Nstar.toFixed(2)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Equilibrium size (stable)&lt;/td&gt;&lt;td&gt;${roots.length ? stable.toFixed(2) : \"none\"}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;How much larger than N*&lt;/td&gt;&lt;td&gt;${roots.length ? ((stable / Nstar - 1) * 100).toFixed(0) + \"%\" : \"none\"}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Utility per resident at N* versus in equilibrium&lt;/td&gt;&lt;td&gt;${u(Nstar).toFixed(1)} vs ${roots.length ? ubar.toFixed(1) : \"none\"}&lt;/td&gt;&lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;`\n\n\n\n\n\n\n\n\n\nThings to try\n\nWith the starting values, why is the equilibrium city larger than N*? What does each newcomer ignore when deciding to move in?\nRaise the agglomeration benefit \\(a\\). What happens to \\(N^*\\) and to the equilibrium size? Does the gap between them grow or shrink?\nRaise the congestion cost \\(c\\) (worse traffic, tighter housing). What happens to city size?\nRaise ū, as if other places got better. At what point does the city stop existing?\nThe left-hand crossing is unstable. Explain why a few extra residents there would set off a rush of growth.",
+    "crumbs": [
+      "Why Cities Exist",
+      "Why Cities Exist"
+    ]
+  },
+  {
+    "objectID": "why-cities.html#what-the-evidence-says",
+    "href": "why-cities.html#what-the-evidence-says",
+    "title": "Why Cities Exist",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nAre cities dying? In the 1990s many observers expected cheaper phone calls and the internet to make cities obsolete. Glaeser (1998) argued that cities exist to cut the cost of moving goods, people, and ideas. Cheaper shipping weakened the first reason, but face-to-face learning and urban amenities kept cities alive. The same debate came back with remote work after COVID-19 (Extending the Model).\nDo cities make workers more productive? Glaeser and Gottlieb (2009) show that wages are higher in larger, denser metro areas, but so are housing costs, which absorb much of the gain, just as spatial equilibrium predicts. A hard question is whether big cities make workers more productive or simply attract more productive workers; separating the two is a recurring challenge in urban economics.",
+    "crumbs": [
+      "Why Cities Exist",
+      "Why Cities Exist"
+    ]
+  },
+  {
+    "objectID": "why-cities.html#closer-to-home",
+    "href": "why-cities.html#closer-to-home",
+    "title": "Why Cities Exist",
+    "section": "Closer to home",
+    "text": "Closer to home\nLewiston grew around the falls of the Androscoggin River, whose water power ran large textile mills. Mills needed many workers, and workers needed housing and stores within walking distance: a city built on scale economies. When the textile industry moved away in the twentieth century, Lewiston lost jobs and population. In the early 2000s, immigrants and refugees, many from Somalia, began arriving and opening businesses downtown, and parts of the old mill complex have been redeveloped for offices, restaurants, and housing.\n\nWater power no longer matters. What advantages does Lewiston–Auburn have today?\nPortland has grown faster than Lewiston–Auburn. Is that because of productivity, amenities, or both? What data would tell them apart?\n\n\nNetwork lens: proximity still shapes who knows whom\nThe learning channel of agglomeration is a claim about networks: ideas travel along personal connections, and connections form more easily between people who are close together. Bailey et al. (2018) measure this with the Social Connectedness Index, built from anonymized Facebook friendships between U.S. counties:\n\\[\n\\text{SCI}_{ij} = \\frac{\\text{friendship links between } i \\text{ and } j}{\\text{users in } i \\times \\text{users in } j}.\n\\]\nEven on a global social network, friendships fall off steeply with distance, counties in the same state are more connected than equally distant counties across state lines, and more-connected places trade more and exchange more migrants. Distance still matters, which is one reason the learning benefits of cities persist.\n\n\n\nIllustrative shape of distance decay in social connectedness (simulated data; see Bailey et al. 2018 for the real estimates).\n\n\nThe SCI data are public through Meta’s Data for Good program. Try listing the counties most connected to Androscoggin County, Maine, and compare them with Cumberland County.",
+    "crumbs": [
+      "Why Cities Exist",
+      "Why Cities Exist"
+    ]
+  },
+  {
+    "objectID": "why-cities.html#did-you-know",
+    "href": "why-cities.html#did-you-know",
+    "title": "Why Cities Exist",
+    "section": "Did you know?",
+    "text": "Did you know?\nBates College takes its name from Benjamin Bates, the Boston investor behind the Bates Manufacturing Company, whose mills on the Androscoggin made Lewiston one of Maine’s major industrial cities. The college sits a short walk from the mills that once paid for it.",
+    "crumbs": [
+      "Why Cities Exist",
+      "Why Cities Exist"
+    ]
+  },
+  {
+    "objectID": "why-cities.html#practice-questions",
+    "href": "why-cities.html#practice-questions",
+    "title": "Why Cities Exist",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nExplain why cities form even though land is cheaper in rural areas. Use scale economies and transport costs, and give an example.\nWrite down the spatial equilibrium condition across cities and use it to explain what high wages with high rents tell us about a city.\nDraw utility per resident against city population. Identify the stable equilibrium and explain why it is larger than \\(N^*\\).",
+    "crumbs": [
+      "Why Cities Exist",
+      "Why Cities Exist"
+    ]
+  },
+  {
+    "objectID": "monocentric-city.html",
+    "href": "monocentric-city.html",
+    "title": "The Monocentric City",
+    "section": "",
+    "text": "Read: Brueckner, Chapter 2; Rosenthal et al. (2022).",
+    "crumbs": [
+      "Why Cities Exist",
+      "The Monocentric City"
+    ]
+  },
+  {
+    "objectID": "monocentric-city.html#the-model",
+    "href": "monocentric-city.html#the-model",
+    "title": "The Monocentric City",
+    "section": "The model",
+    "text": "The model\nPicture a city where every job is downtown, in the central business district (CBD). Everyone earns the same income and commutes to the CBD. Living farther out means a longer, more expensive commute. So why would anyone live far away? Because housing is cheaper there. This trade-off between commuting cost and housing cost is the heart of the Alonso–Muth–Mills model.\n\nThe rent gradient\nKeep it simple: every household lives on one lot of the same size. A household at distance \\(x\\) miles from the CBD earns income \\(y\\), pays rent \\(r(x)\\) for its lot, pays commuting cost \\(t\\) per mile per year, and spends what is left, \\(c\\), on everything else:\n\\[\nc = y - t\\,x - r(x).\n\\]\nIf households could be better off at one location than another, they would move there and bid up its rent. So in equilibrium, everyone gets the same \\(c\\), wherever they live. Rearranging:\n\\[\nr(x) = y - t\\,x - c.\n\\]\nRent falls by exactly \\(t\\) for every extra mile. Being one mile closer to the CBD saves \\(t\\) in commuting, and landlords capture that saving in rent. The downward-sloping line is the rent gradient.\n\n\nThe edge of the city\nThe city stops where urban rent falls to what the land would earn in farming, the agricultural rent \\(r_A\\). Call that distance \\(\\bar{x}\\). If the city has \\(N\\) households and \\(D\\) lots per square mile, it fills a circle of area \\(\\pi \\bar{x}^2\\), so\n\\[\n\\bar{x} = \\sqrt{\\frac{N}{\\pi D}}, \\qquad r(x) = r_A + t\\,(\\bar{x} - x).\n\\]\nRent at the CBD is \\(r_A + t\\bar{x}\\): agricultural rent plus the commuting cost saved by living downtown instead of at the edge.\n\n\nClosed and open cities\n\nIn a closed city, the population \\(N\\) is fixed. Changes show up in residents’ consumption \\(c\\).\nIn an open city, people can move in or out freely, so \\(c\\) is pinned to what they could get elsewhere. Changes show up in population and in the city’s size.\n\nThe full Brueckner model also lets households choose how much space to use. Then dwellings are smaller and buildings taller near the CBD, and the rent curve bends instead of being a straight line. The fixed-lot version here keeps the arithmetic simple while preserving the key logic.",
+    "crumbs": [
+      "Why Cities Exist",
+      "The Monocentric City"
+    ]
+  },
+  {
+    "objectID": "monocentric-city.html#simulation",
+    "href": "monocentric-city.html#simulation",
+    "title": "The Monocentric City",
+    "section": "Simulation",
+    "text": "Simulation\nChange the inputs and watch the rent gradient respond. The dashed grey line shows the starting city so you can compare.\n\n\n\nShow the simulation code\nviewof mode = Inputs.radio([\"Closed city\", \"Open city\"], {value: \"Closed city\", label: \"City type\"})\nviewof y = Inputs.range([30000, 120000], {value: 60000, step: 1000, label: \"Income, y ($/yr)\"})\nviewof t = Inputs.range([500, 4000], {value: 1500, step: 50, label: \"Commuting cost, t ($ per mile per yr)\"})\nviewof rA = Inputs.range([0, 10000], {value: 3000, step: 250, label: \"Agricultural rent, rA ($ per lot per yr)\"})\nviewof N = Inputs.range([10, 500], {value: 150, step: 5, label: \"Population, N (thousand households; closed city only)\"})\nviewof D = Inputs.range([1000, 8000], {value: 4000, step: 250, label: \"Density, D (lots per sq. mile)\"})\nviewof cbar = Inputs.range([20000, 80000], {value: 51800, step: 100, label: \"Outside option, c̄ ($/yr, open city only)\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nfunction solve(p) {\n  if (p.mode === \"Closed city\") {\n    const xbar = Math.sqrt(p.N * 1000 / (Math.PI * p.D));\n    const c = p.y - p.t * xbar - p.rA;\n    return {xbar, c, N: p.N, viable: c &gt; 0};\n  }\n  const xbar = Math.max((p.y - p.cbar - p.rA) / p.t, 0);\n  const Nk = Math.PI * p.D * xbar * xbar / 1000;\n  return {xbar, c: p.cbar, N: Nk, viable: xbar &gt; 0};\n}\nbase = solve({mode, y: 60000, t: 1500, rA: 3000, N: 150, D: 4000, cbar: 51800})\ncity = solve({mode, y, t, rA, N, D, cbar})\nxmax = Math.max(base.xbar, city.xbar, 1) * 1.15\ncurve = (s, tt, ra) =&gt; d3.range(0, xmax, xmax / 200).map(x =&gt; ({x, r: x &lt;= s.xbar ? ra + tt * (s.xbar - x) : ra}))\nPlot.plot({\n  height: 340, marginLeft: 70,\n  x: {label: \"Distance from the CBD (miles) →\", domain: [0, xmax]},\n  y: {label: \"↑ Rent ($ per lot per year)\", grid: true, zero: true},\n  marks: [\n    Plot.line(curve(base, 1500, 3000), {x: \"x\", y: \"r\", stroke: \"#999\", strokeDasharray: \"5,4\"}),\n    Plot.line(curve(city, t, rA), {x: \"x\", y: \"r\", stroke: \"#881124\", strokeWidth: 3}),\n    Plot.ruleX([city.xbar], {stroke: \"#881124\", strokeOpacity: 0.4}),\n    Plot.text([{x: city.xbar, r: rA}], {x: \"x\", y: \"r\", text: d =&gt; \" edge\", dy: -10, textAnchor: \"start\", fill: \"#881124\"})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nfmt = d3.format(\",.0f\")\nhtml`${!city.viable ? html`&lt;p&gt;&lt;strong&gt;This city is not viable:&lt;/strong&gt; residents would have nothing left after rent and commuting. Lower the population or commuting cost, or raise income.&lt;/p&gt;` : \"\"}\n&lt;table class=\"table table-sm readout\"&gt;\n  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;Starting city&lt;/th&gt;&lt;th&gt;Your city&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;\n  &lt;tbody&gt;\n    &lt;tr&gt;&lt;td&gt;City radius x̄ (miles)&lt;/td&gt;&lt;td&gt;${base.xbar.toFixed(2)}&lt;/td&gt;&lt;td&gt;${city.xbar.toFixed(2)}&lt;/td&gt;&lt;/tr&gt;\n    &lt;tr&gt;&lt;td&gt;Population (thousand households)&lt;/td&gt;&lt;td&gt;${fmt(base.N)}&lt;/td&gt;&lt;td&gt;${fmt(city.N)}&lt;/td&gt;&lt;/tr&gt;\n    &lt;tr&gt;&lt;td&gt;Rent at the CBD ($ per lot per year)&lt;/td&gt;&lt;td&gt;${fmt(3000 + 1500 * base.xbar)}&lt;/td&gt;&lt;td&gt;${fmt(rA + t * city.xbar)}&lt;/td&gt;&lt;/tr&gt;\n    &lt;tr&gt;&lt;td&gt;Residents' other spending, c ($ per year)&lt;/td&gt;&lt;td&gt;${fmt(base.c)}&lt;/td&gt;&lt;td&gt;${fmt(city.c)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;/tbody&gt;\n&lt;/table&gt;`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThings to try\n\nRaise commuting cost \\(t\\) in a closed city. Which way does the rent line rotate? Why does rent rise downtown but not at the edge? Who pays for the higher commuting cost: residents or landowners?\nMake the same change in an open city. Now what happens to the city’s radius and population? Who bears the cost this time?\nRaise income \\(y\\) in each type of city. In which case does rent change, and in which does \\(c\\) change?\nRaise population \\(N\\) in a closed city. Why does the whole rent line shift up?\nRaise density \\(D\\). What happens to the radius and to rent at the CBD? What kinds of policies change \\(D\\) in real cities?",
+    "crumbs": [
+      "Why Cities Exist",
+      "The Monocentric City"
+    ]
+  },
+  {
+    "objectID": "monocentric-city.html#what-the-evidence-says",
+    "href": "monocentric-city.html#what-the-evidence-says",
+    "title": "The Monocentric City",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nThe model’s central prediction, that land and housing are most expensive near the center and cheaper farther out, holds in most cities. The interesting questions are how steep the gradient is and how it changes.\nRosenthal et al. (2022) ask whether COVID-19 made city centers less valuable for businesses. Using commercial real estate rents, they find that the rent premium for dense, central locations fell after the pandemic began, especially in cities where many workers commute by public transit. In model terms, the value of being close to the center declined. Whether that change is permanent is still an open question, and we return to it with remote work in Extending the Model.",
+    "crumbs": [
+      "Why Cities Exist",
+      "The Monocentric City"
+    ]
+  },
+  {
+    "objectID": "monocentric-city.html#closer-to-home",
+    "href": "monocentric-city.html#closer-to-home",
+    "title": "The Monocentric City",
+    "section": "Closer to home",
+    "text": "Closer to home\nPortland’s peninsula is the closest thing in Maine to a classic CBD: offices, the port, and many restaurants are packed into a small area, and the Casco Bay coastline limits how far the center can spread.\n\nIf you looked up rents on the peninsula and in towns at increasing distance (South Portland, Westbrook, Gorham, and beyond), would you expect a clean gradient? What else besides commuting distance might affect rents?\nLewiston–Auburn has two downtowns facing each other across the Androscoggin River. How well does a single-center model describe it?\n\n\nNetwork lens: where you live shapes where you work\nThe model treats the commute as a cost of distance. But location also determines who your neighbors are, and neighbors pass along job leads. Using Boston-area census data, Bayer et al. (2008) compare people living on the same city block with people living on nearby blocks in the same small area. People on the same block are more likely to work at the same place, consistent with informal job referrals among neighbors. A residential location is not just a point on a rent gradient; it is also a position in a social network.",
+    "crumbs": [
+      "Why Cities Exist",
+      "The Monocentric City"
+    ]
+  },
+  {
+    "objectID": "monocentric-city.html#did-you-know",
+    "href": "monocentric-city.html#did-you-know",
+    "title": "The Monocentric City",
+    "section": "Did you know?",
+    "text": "Did you know?\nThe rent gradient is older than the city model. In 1826 the German economist Johann Heinrich von Thünen showed that farmland closer to a market town earns higher rent because crops cost less to haul there. William Alonso adapted the idea to households commuting to downtown jobs in his 1964 book Location and Land Use, and Richard Muth and Edwin Mills developed it further. That is why the model carries their three names.",
+    "crumbs": [
+      "Why Cities Exist",
+      "The Monocentric City"
+    ]
+  },
+  {
+    "objectID": "monocentric-city.html#practice-questions",
+    "href": "monocentric-city.html#practice-questions",
+    "title": "The Monocentric City",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nWrite down the household budget at distance \\(x\\) and explain why \\(c\\) must be the same at every location. Use this to derive the rent gradient.\nIn a closed city, commuting cost rises. Using a graph, show what happens to rent at the CBD and at the edge. Who gains and who loses?\nRepeat question 2 for an open city. Why does the answer change?",
+    "crumbs": [
+      "Why Cities Exist",
+      "The Monocentric City"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Urban Economics Lab",
+    "section": "",
+    "text": "Why do people pay so much to live close together? Why does rent fall as you move away from downtown? Why does adding highway lanes rarely fix traffic? This site works through the core models of urban economics, one topic per week, and lets you change the inputs and watch the model respond.\nEach page follows the course schedule and pairs with Jan Brueckner’s Lectures on Urban Economics (Brueckner 2011) and the assigned articles. The pages are meant to be read alongside the textbook, not in place of it.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#how-each-page-works",
+    "href": "index.html#how-each-page-works",
+    "title": "Urban Economics Lab",
+    "section": "How each page works",
+    "text": "How each page works\n\nThe model. The economic logic, with the one or two equations you need. This is what you should be able to draw and derive on a midterm.\nSimulation. Sliders that change the model’s inputs. The graph and the numbers below it update immediately. Everything runs in your browser; nothing to install.\nThings to try. Short experiments with the simulation, each with a question to answer.\nWhat the evidence says. What the assigned research finds, and how the authors know.\nCloser to home. Lewiston–Auburn, Portland, and the rest of Maine.\nNetwork lens. An optional note on how network data and network thinking shed light on the topic.\nDid you know? A short historical or real-world aside.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#topics",
+    "href": "index.html#topics",
+    "title": "Urban Economics Lab",
+    "section": "Topics",
+    "text": "Topics\nWhy cities exist\n\nWhy Cities Exist: agglomeration, spatial equilibrium, and how big a city gets (Week 1)\nThe Monocentric City: rent gradients and the edge of the city (Week 2)\nExtending the Model: closed versus open cities, and what remote work does to rents (Week 3)\n\nLand use and transportation\n\nSprawl and Land-Use Controls: why market cities can spread out too far (Week 4)\nTraffic Congestion: congestion tolls and the fundamental law of road congestion (Week 5)\n\nHousing\n\nOwning versus Renting: the user cost of housing and the tax code (Week 6)\nHousing Supply and Affordability: why the same demand boom raises prices in some cities and building in others (Week 7)\nHousing Policy: rent control and vouchers (Week 8)\n\nLocal government and quality of life\n\nLocal Public Goods and Neighborhoods: Tiebout sorting and capitalization (Week 9)\nPollution and Crime: Pigouvian taxes, Coase, and social multipliers (Week 10)\nMeasuring Quality of Life: what wages and rents reveal about amenities (Week 11)\nPlace-Based Policy: local multipliers and who gains from helping places (Week 12)\n\n\n\n\n\n\n\nNoteAbout the numbers\n\n\n\nThe simulations use simple versions of the models with made-up but realistic numbers. They are built to show how the models work, not to describe any real city. When a page reports real findings, it cites the research.",
+    "crumbs": [
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "tenure-choice.html",
+    "href": "tenure-choice.html",
+    "title": "Owning versus Renting",
+    "section": "",
+    "text": "Read: Brueckner, Chapter 6; Painter et al. (2001).",
+    "crumbs": [
+      "Housing",
+      "Owning versus Renting"
+    ]
+  },
+  {
+    "objectID": "tenure-choice.html#the-model",
+    "href": "tenure-choice.html#the-model",
+    "title": "Owning versus Renting",
+    "section": "The model",
+    "text": "The model\nShould you buy a home or rent one? The sticker price of a house is the wrong comparison. What matters is the annual cost of owning, called the user cost, compared with a year’s rent for a similar home.\n\nThe user cost of owning\nOwning a home worth \\(V\\) for a year costs you:\n\nInterest on the money tied up in the home, \\(iV\\), whether it is paid to a bank on a mortgage or forgone on your own savings;\nProperty tax, \\(pV\\);\nMaintenance and depreciation, \\(dV\\);\n\nminus\n\nExpected appreciation, \\(gV\\), the gain if the home’s value rises.\n\nWithout taxes, the user cost is \\((i + p + d - g)V\\).\n\n\nWhere the tax code comes in\nThe U.S. income tax treats owners and renters differently. A landlord pays income tax on rent received; an owner-occupier pays no tax on the housing services they “rent to themselves.” Owners who itemize can also deduct mortgage interest and property taxes. For a household with marginal tax rate \\(\\tau\\) that itemizes,\n\\[\n\\text{user cost} = \\big[(1 - \\tau)(i + p) + d - g\\big] V.\n\\]\nThe deductions are worth more to households in higher tax brackets, so higher-income households face a lower cost of owning and are more likely to own. Households that expect to move soon tend to rent, because buying and selling a home is expensive.",
+    "crumbs": [
+      "Housing",
+      "Owning versus Renting"
+    ]
+  },
+  {
+    "objectID": "tenure-choice.html#simulation",
+    "href": "tenure-choice.html#simulation",
+    "title": "Owning versus Renting",
+    "section": "Simulation",
+    "text": "Simulation\nCompare the yearly cost of owning with the yearly rent for a similar home.\n\n\n\nShow the simulation code\nviewof V = Inputs.range([150000, 800000], {value: 350000, step: 5000, label: \"Home price, V ($)\"})\nviewof rent = Inputs.range([6000, 48000], {value: 19200, step: 600, label: \"Rent for a similar home ($ per yr)\"})\nviewof iRate = Inputs.range([2, 9], {value: 6.5, step: 0.1, label: \"Interest rate, i (%)\"})\nviewof pRate = Inputs.range([0.5, 3], {value: 1.4, step: 0.1, label: \"Property tax rate, p (%)\"})\nviewof dRate = Inputs.range([0.5, 4], {value: 2, step: 0.1, label: \"Maintenance and depreciation, d (%)\"})\nviewof gRate = Inputs.range([-3, 8], {value: 3, step: 0.1, label: \"Expected appreciation, g (%)\"})\nviewof tau = Inputs.range([0, 40], {value: 24, step: 1, label: \"Marginal income tax rate, τ (%)\"})\nviewof itemize = Inputs.toggle({label: \"Itemizes deductions\", value: false})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nuserCost = (taxRate) =&gt; {\n  const s = itemize ? taxRate / 100 : 0;      // deductions only help if you itemize\n  return ((1 - s) * (iRate + pRate) / 100 + dRate / 100 - gRate / 100) * V;\n}\nuc = userCost(tau)\nPlot.plot({\n  height: 300, marginLeft: 60,\n  x: {label: \"Marginal income tax rate, τ (%) →\", domain: [0, 40]},\n  y: {label: \"↑ Dollars per year\", grid: true, zero: true},\n  color: {legend: true, domain: [\"User cost of owning\", \"Rent\"], range: [\"#881124\", \"#2b6cb0\"]},\n  marks: [\n    Plot.line(d3.range(0, 40.5, 0.5), {x: d =&gt; d, y: userCost, stroke: () =&gt; \"User cost of owning\", strokeWidth: 3}),\n    Plot.ruleY([rent], {stroke: () =&gt; \"Rent\", strokeWidth: 2, strokeDasharray: \"5,4\"}),\n    Plot.dot([{x: tau, y: uc}], {x: \"x\", y: \"y\", r: 6, fill: \"#881124\"})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nfd = d3.format(\",.0f\")\nhtml`&lt;table class=\"table table-sm readout\"&gt;&lt;tbody&gt;\n  &lt;tr&gt;&lt;td&gt;Yearly cost of owning&lt;/td&gt;&lt;td&gt;$${fd(uc)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Yearly rent&lt;/td&gt;&lt;td&gt;$${fd(rent)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Cheaper option this year&lt;/td&gt;&lt;td&gt;&lt;strong&gt;${uc &lt; rent ? \"Own\" : \"Rent\"}&lt;/strong&gt; (by $${fd(Math.abs(rent - uc))})&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Price-to-rent ratio, V / rent&lt;/td&gt;&lt;td&gt;${(V / rent).toFixed(1)}&lt;/td&gt;&lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe simulation leaves out the costs of buying and selling, the down payment, and the details of current tax law, all of which matter for a real decision.\n\nThings to try\n\nTurn itemizing on. How does the cost of owning change as the tax rate rises? Why is the line flat when itemizing is off?\nLower expected appreciation \\(g\\) to 0. Does owning still beat renting? What does this say about buying in a market people expect to cool?\nRaise the interest rate from 3% to 7%. How much more does owning cost each year?\nFind the rent at which you would be indifferent between owning and renting. How does it compare with the common rule of thumb that buying makes sense when the price-to-rent ratio is low?",
+    "crumbs": [
+      "Housing",
+      "Owning versus Renting"
+    ]
+  },
+  {
+    "objectID": "tenure-choice.html#what-the-evidence-says",
+    "href": "tenure-choice.html#what-the-evidence-says",
+    "title": "Owning versus Renting",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nHomeownership rates differ widely across groups. Painter et al. (2001) use household data from Los Angeles to ask how much of the gaps across racial, ethnic, and immigrant groups can be explained by differences in income, household characteristics, and, for immigrants, how long they have lived in the United States. Read the paper with this question in mind: how much of each gap do these factors explain, and what might any remaining gap reflect? Possibilities include access to credit, discrimination, and differences in preferences, and each points to a different policy response.",
+    "crumbs": [
+      "Housing",
+      "Owning versus Renting"
+    ]
+  },
+  {
+    "objectID": "tenure-choice.html#closer-to-home",
+    "href": "tenure-choice.html#closer-to-home",
+    "title": "Owning versus Renting",
+    "section": "Closer to home",
+    "text": "Closer to home\n\nPortland and Lewiston have very different price-to-rent ratios. Look up typical home values and rents in each. In which city does owning look cheaper relative to renting?\nBates students rent. Why does it almost never make sense to buy a home you will live in for four years?\n\n\nNetwork lens: your friends’ housing markets\nExpected appreciation \\(g\\) is a belief, and beliefs spread through social networks. Bailey et al. (2018) link Facebook friendship networks to housing transactions for Los Angeles residents. People whose friends in other cities had recently seen bigger house-price gains were more likely to buy rather than rent, bought larger homes, and paid more. Because friends live in many different housing markets, these experiences vary for reasons unrelated to the buyer’s own neighborhood, which helps the authors separate the effect of friends’ experiences from local conditions. In the user-cost formula, the network shifts \\(g\\).",
+    "crumbs": [
+      "Housing",
+      "Owning versus Renting"
+    ]
+  },
+  {
+    "objectID": "tenure-choice.html#did-you-know",
+    "href": "tenure-choice.html#did-you-know",
+    "title": "Owning versus Renting",
+    "section": "Did you know?",
+    "text": "Did you know?\nThe 2017 federal tax law nearly doubled the standard deduction, limited the mortgage interest deduction on new loans, and capped the deduction for state and local taxes. As a result, far fewer households itemize, and for most homeowners the “itemizes deductions” switch in the simulation is now off. Later laws have adjusted some of these limits.",
+    "crumbs": [
+      "Housing",
+      "Owning versus Renting"
+    ]
+  },
+  {
+    "objectID": "tenure-choice.html#practice-questions",
+    "href": "tenure-choice.html#practice-questions",
+    "title": "Owning versus Renting",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nWrite down the user cost of owning with and without the tax deductions, and explain each term.\nExplain why higher-income households are more likely to own.\nExplain how Bailey et al. (2018) separate the effect of friends’ experiences from local housing-market conditions.",
+    "crumbs": [
+      "Housing",
+      "Owning versus Renting"
+    ]
+  },
+  {
+    "objectID": "pollution-crime.html",
+    "href": "pollution-crime.html",
+    "title": "Pollution and Crime",
+    "section": "",
+    "text": "Read: Brueckner, Chapters 9 and 10; Currie et al. (2015); Chalfin and McCrary (2017).",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Pollution and Crime"
+    ]
+  },
+  {
+    "objectID": "pollution-crime.html#the-model",
+    "href": "pollution-crime.html#the-model",
+    "title": "Pollution and Crime",
+    "section": "The model",
+    "text": "The model\nCities put people close together, which makes both pollution and crime more costly. Both topics turn on externalities and on how people respond to incentives.\n\nPollution: Pigou and Coase\nA factory that ignores the harm its emissions cause to neighbors produces where price equals its marginal private cost. The efficient output sets price equal to marginal social cost, private cost plus the marginal damage to others:\n\\[\nP = MPC(Q) + MD(Q).\n\\]\nA Pigouvian tax equal to marginal damage at the efficient output makes the factory face the full cost. The Coase theorem offers another route: if property rights are clear and bargaining is cheap, the factory and its neighbors can negotiate to the efficient outcome on their own. In a dense city with thousands of affected residents, bargaining is rarely cheap.\n\n\nCrime: incentives and social interactions\nIn Gary Becker’s model, a person commits a crime when the benefit exceeds the expected cost: the probability of being caught, \\(p\\), times the punishment, \\(f\\). Raising either deters crime, but the evidence favors certainty over severity.\nPeople also respond to one another. If each person’s behavior depends partly on what their peers do, a policy that directly reduces crime by some amount sets off a chain of further reductions. With individual crime rate \\(a = b + s\\,\\bar{a}\\), where \\(b\\) reflects a person’s own incentives, \\(\\bar{a}\\) the average among peers, and \\(0 &lt; s &lt; 1\\) the strength of peer effects, the equilibrium is\n\\[\na = \\frac{b}{1 - s}.\n\\]\nThe factor \\(1/(1-s)\\) is the social multiplier.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Pollution and Crime"
+    ]
+  },
+  {
+    "objectID": "pollution-crime.html#simulation-1-a-pigouvian-tax",
+    "href": "pollution-crime.html#simulation-1-a-pigouvian-tax",
+    "title": "Pollution and Crime",
+    "section": "Simulation 1: A Pigouvian tax",
+    "text": "Simulation 1: A Pigouvian tax\nThe factory sells at price \\(P\\) and has marginal private cost \\(MPC = 20 + mQ\\) and marginal damage \\(MD = dQ\\). Starting values match Problem B2 on Midterm 2.\n\n\n\nShow the simulation code\nviewof price = Inputs.range([40, 120], {value: 80, step: 1, label: \"Output price, P ($)\"})\nviewof m = Inputs.range([0.5, 2], {value: 1, step: 0.05, label: \"Private cost slope, m\"})\nviewof dmg = Inputs.range([0, 2], {value: 0.5, step: 0.05, label: \"Marginal damage slope, d\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nQp = (price - 20) / m                     // private: P = MPC\nQe = (price - 20) / (m + dmg)             // efficient: P = MPC + MD\ntax = dmg * Qe\ndwlP = 0.5 * (Qp - Qe) * (dmg * Qp)       // MSC - P at the private output equals d * Qp\nQmaxP = Qp * 1.3\nPlot.plot({\n  height: 320, marginLeft: 50,\n  x: {label: \"Output, Q →\", domain: [0, QmaxP]},\n  y: {label: \"↑ Dollars per unit\", grid: true, zero: true},\n  color: {legend: true, domain: [\"Price\", \"Marginal private cost\", \"Marginal social cost\"], range: [\"#333\", \"#2b6cb0\", \"#881124\"]},\n  marks: [\n    dmg &gt; 0 ? Plot.areaY(d3.range(Qe, Qp, (Qp - Qe) / 50).concat([Qp]), {x: q =&gt; q, y1: () =&gt; price, y2: q =&gt; 20 + (m + dmg) * q, fill: \"#881124\", fillOpacity: 0.15}) : null,\n    Plot.ruleY([price], {stroke: () =&gt; \"Price\", strokeWidth: 2}),\n    Plot.line(d3.range(0, QmaxP, QmaxP / 100), {x: q =&gt; q, y: q =&gt; 20 + m * q, stroke: () =&gt; \"Marginal private cost\", strokeWidth: 2}),\n    Plot.line(d3.range(0, QmaxP, QmaxP / 100), {x: q =&gt; q, y: q =&gt; 20 + (m + dmg) * q, stroke: () =&gt; \"Marginal social cost\", strokeWidth: 2}),\n    Plot.dot([{q: Qp, v: price}, {q: Qe, v: price}], {x: \"q\", y: \"v\", r: 5, fill: \"black\"})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nhtml`&lt;table class=\"table table-sm readout\"&gt;&lt;tbody&gt;\n  &lt;tr&gt;&lt;td&gt;Output when damage is ignored&lt;/td&gt;&lt;td&gt;${Qp.toFixed(1)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Efficient output&lt;/td&gt;&lt;td&gt;${Qe.toFixed(1)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Pigouvian tax per unit&lt;/td&gt;&lt;td&gt;$${tax.toFixed(2)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Deadweight loss without the tax (shaded)&lt;/td&gt;&lt;td&gt;$${dwlP.toFixed(0)}&lt;/td&gt;&lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;`",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Pollution and Crime"
+    ]
+  },
+  {
+    "objectID": "pollution-crime.html#simulation-2-the-social-multiplier",
+    "href": "pollution-crime.html#simulation-2-the-social-multiplier",
+    "title": "Pollution and Crime",
+    "section": "Simulation 2: The social multiplier",
+    "text": "Simulation 2: The social multiplier\n\n\n\nShow the simulation code\nviewof s = Inputs.range([0, 0.9], {value: 0.5, step: 0.05, label: \"Strength of peer effects, s\"})\nviewof cut = Inputs.range([0, 10], {value: 2, step: 0.5, label: \"Direct effect of a policy on each person's crime rate, Δb (points)\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nmult = 1 / (1 - s)\nPlot.plot({\n  height: 200, marginLeft: 150,\n  x: {label: \"Reduction in the crime rate (points) →\", grid: true, zero: true},\n  y: {label: null},\n  marks: [\n    Plot.barX([{k: \"Direct effect\", v: cut}, {k: \"Total effect with peers\", v: cut * mult}], {x: \"v\", y: \"k\", fill: d =&gt; d.k === \"Direct effect\" ? \"#999\" : \"#881124\"}),\n    Plot.text([{k: \"Direct effect\", v: cut}, {k: \"Total effect with peers\", v: cut * mult}], {x: \"v\", y: \"k\", text: d =&gt; d.v.toFixed(1), dx: 18})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nhtml`&lt;p class=\"readout\"&gt;Social multiplier 1 / (1 − s) = &lt;strong&gt;${mult.toFixed(2)}&lt;/strong&gt;. A policy that directly lowers crime by ${cut} points lowers it by &lt;strong&gt;${(cut * mult).toFixed(1)}&lt;/strong&gt; points once peers respond to each other.&lt;/p&gt;`\n\n\n\n\n\n\n\n\n\nThings to try\n\nIn Simulation 1, confirm the midterm answers: private output 60, efficient output 40, a $20 tax, and a $300 deadweight loss.\nSet marginal damage to zero. What happens to the tax and the deadweight loss? Why?\nRaise the damage slope. Does the efficient output fall by a lot or a little? What does that suggest about how stringent pollution rules should be near dense neighborhoods?\nIn Simulation 2, set \\(s = 0\\). What is the multiplier? Now raise \\(s\\) to 0.8. Why do small differences in incentives produce big differences in crime when peer effects are strong?\nPeer effects amplify bad shocks too. Use Simulation 2 to explain how a small rise in unemployment could produce a large rise in crime.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Pollution and Crime"
+    ]
+  },
+  {
+    "objectID": "pollution-crime.html#what-the-evidence-says",
+    "href": "pollution-crime.html#what-the-evidence-says",
+    "title": "Pollution and Crime",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nWhat people pay to avoid pollution. Currie et al. (2015) study about 1,600 openings and closings of industrial plants that emit toxic pollutants. Comparing homes very close to a plant with homes slightly farther away, before and after, they find that nearby home values fall when a plant opens and recover after it closes, and that infants born close to plants are in worse health. House prices reveal what people are willing to pay for cleaner air, the hedonic approach.\nWhat deters crime. Chalfin and McCrary (2017) review the evidence and conclude that increases in the certainty of being caught, especially through more police, reduce crime more reliably than increases in the severity of punishment, such as longer sentences. Offenders may weigh the immediate risk of arrest more than a distant prison term.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Pollution and Crime"
+    ]
+  },
+  {
+    "objectID": "pollution-crime.html#closer-to-home",
+    "href": "pollution-crime.html#closer-to-home",
+    "title": "Pollution and Crime",
+    "section": "Closer to home",
+    "text": "Closer to home\n\nThe paper and textile mills along Maine’s rivers once discharged heavily into the water. Use the Coase theorem to explain why downstream towns could not simply bargain with the mills.\nLewiston has invested in community policing downtown. Using the deterrence evidence, what kind of police activity would you expect to matter most?\n\n\nNetwork lens: crime spreads through social interactions\nWhy do crime rates differ so much between cities that look alike on paper? Glaeser et al. (1996) build a model where each person’s choice depends on their neighbors’ choices and use it to measure social interactions from how much crime varies across places. They find variation far larger than differences in observable characteristics can explain, implying strong social interactions, which are largest for petty crimes and smallest for serious crimes such as murder. Simulation 2 is a stripped-down version of that idea.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Pollution and Crime"
+    ]
+  },
+  {
+    "objectID": "pollution-crime.html#did-you-know",
+    "href": "pollution-crime.html#did-you-know",
+    "title": "Pollution and Crime",
+    "section": "Did you know?",
+    "text": "Did you know?\nThree of the ideas on this page carry famous names. Arthur Pigou proposed taxing activities that harm others in The Economics of Welfare (1920). Ronald Coase’s “The Problem of Social Cost” (1960) showed when bargaining can solve the problem instead. And Gary Becker’s “Crime and Punishment: An Economic Approach” (1968) began, he later recalled, when he was running late and weighed the cost of an illegal parking spot against the risk of a ticket.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Pollution and Crime"
+    ]
+  },
+  {
+    "objectID": "pollution-crime.html#practice-questions",
+    "href": "pollution-crime.html#practice-questions",
+    "title": "Pollution and Crime",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nUsing a graph, show the private and efficient output of a polluting factory, the Pigouvian tax, and the deadweight loss.\nState the Coase theorem and explain why it rarely applies to urban pollution.\nDerive the social multiplier from \\(a = b + s\\bar{a}\\) and explain why it implies large differences in crime across similar places.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Pollution and Crime"
+    ]
+  },
+  {
+    "objectID": "congestion.html",
+    "href": "congestion.html",
+    "title": "Traffic Congestion",
+    "section": "",
+    "text": "Read: Brueckner, Chapter 5; Duranton and Turner (2011); Tarduno (2021).",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Traffic Congestion"
+    ]
+  },
+  {
+    "objectID": "congestion.html#the-model",
+    "href": "congestion.html#the-model",
+    "title": "Traffic Congestion",
+    "section": "The model",
+    "text": "The model\nEvery driver who enters a crowded highway slows down everyone else a little. No single driver notices the few seconds they add to each other car’s trip, but across thousands of cars those seconds add up. That ignored cost is a classic externality, and it is why rush-hour traffic is worse than it should be.\n\nAverage cost versus marginal cost\nLet \\(T\\) be the number of cars per hour. The cost of a trip to each driver, time plus operating cost, rises with traffic:\n\\[\nAC(T) = a + bT.\n\\]\nThe total cost of all trips is \\(T \\cdot AC(T) = aT + bT^2\\), so the marginal social cost of one more car is\n\\[\nMC(T) = a + 2bT.\n\\]\nThe gap, \\(MC - AC = bT\\), is the delay the extra car imposes on everyone else.\n\n\nTwo equilibria\nDrivers’ willingness to pay for a trip is the demand curve, \\(MB(T) = \\alpha - \\beta T\\).\n\nWithout a toll, drivers keep entering until the benefit of the last trip equals the cost they pay: \\(MB = AC\\). Too many people drive.\nThe efficient level sets benefit equal to the full social cost: \\(MB = MC\\).\n\nA congestion toll equal to \\(bT^*\\), the external cost at the efficient level of traffic, closes the gap. Drivers then face \\(AC + \\text{toll} = MC\\), and traffic falls to \\(T^*\\). The deadweight loss of having no toll is the triangle between \\(MC\\) and \\(MB\\) from \\(T^*\\) to the unpriced level of traffic.",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Traffic Congestion"
+    ]
+  },
+  {
+    "objectID": "congestion.html#simulation",
+    "href": "congestion.html#simulation",
+    "title": "Traffic Congestion",
+    "section": "Simulation",
+    "text": "Simulation\nThe starting values match Problem B2 on Midterm 1. The road capacity slider shows what happens when you add lanes instead of charging a toll.\n\n\n\nShow the simulation code\nviewof a = Inputs.range([5, 20], {value: 10, step: 0.5, label: \"Free-flow cost, a ($)\"})\nviewof b = Inputs.range([0.001, 0.005], {value: 0.002, step: 0.0001, label: \"Congestion slope, b\"})\nviewof alpha = Inputs.range([30, 80], {value: 50, step: 1, label: \"Demand intercept, α ($)\"})\nviewof beta = Inputs.range([0.002, 0.012], {value: 0.006, step: 0.0005, label: \"Demand slope, β\"})\nviewof cap = Inputs.range([1, 3], {value: 1, step: 0.1, label: \"Road capacity (× today's lanes)\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nbe = b / cap\nT0 = (alpha - a) / (be + beta)          // unpriced: MB = AC\nTs = (alpha - a) / (2 * be + beta)      // efficient: MB = MC\ntoll = be * Ts\ndwl = 0.5 * (T0 - Ts) * (be * T0)       // gap between MC and MB at T0 equals b*T0\nTmax = alpha / beta\npts = d3.range(0, Tmax, Tmax / 200)\nPlot.plot({\n  height: 360, marginLeft: 50,\n  x: {label: \"Cars per hour, T →\", domain: [0, Tmax]},\n  y: {label: \"↑ Dollars per trip\", domain: [0, Math.max(alpha, a + 2 * be * T0) * 1.05], grid: true},\n  color: {legend: true, domain: [\"Demand (MB)\", \"Average cost (AC)\", \"Marginal social cost (MC)\"], range: [\"#333\", \"#2b6cb0\", \"#881124\"]},\n  marks: [\n    Plot.areaY(d3.range(Ts, T0, (T0 - Ts) / 50).concat([T0]), {x: d =&gt; d, y1: d =&gt; alpha - beta * d, y2: d =&gt; a + 2 * be * d, fill: \"#881124\", fillOpacity: 0.15}),\n    Plot.line(pts, {x: d =&gt; d, y: d =&gt; alpha - beta * d, stroke: () =&gt; \"Demand (MB)\", strokeWidth: 2}),\n    Plot.line(pts, {x: d =&gt; d, y: d =&gt; a + be * d, stroke: () =&gt; \"Average cost (AC)\", strokeWidth: 2}),\n    Plot.line(pts, {x: d =&gt; d, y: d =&gt; a + 2 * be * d, stroke: () =&gt; \"Marginal social cost (MC)\", strokeWidth: 2}),\n    Plot.dot([{T: T0, p: a + be * T0}, {T: Ts, p: alpha - beta * Ts}], {x: \"T\", y: \"p\", r: 5, fill: \"black\"}),\n    Plot.text([{T: T0, p: a + be * T0, l: \"No toll\"}, {T: Ts, p: alpha - beta * Ts, l: \"Efficient\"}], {x: \"T\", y: \"p\", text: \"l\", dy: -12})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nf0 = d3.format(\",.0f\")\nf2 = d3.format(\",.2f\")\nhtml`&lt;table class=\"table table-sm readout\"&gt;\n  &lt;tbody&gt;\n    &lt;tr&gt;&lt;td&gt;Traffic with no toll (cars per hour)&lt;/td&gt;&lt;td&gt;${f0(T0)}&lt;/td&gt;&lt;/tr&gt;\n    &lt;tr&gt;&lt;td&gt;Cost per trip with no toll&lt;/td&gt;&lt;td&gt;$${f2(a + be * T0)}&lt;/td&gt;&lt;/tr&gt;\n    &lt;tr&gt;&lt;td&gt;Efficient traffic (cars per hour)&lt;/td&gt;&lt;td&gt;${f0(Ts)}&lt;/td&gt;&lt;/tr&gt;\n    &lt;tr&gt;&lt;td&gt;Congestion toll&lt;/td&gt;&lt;td&gt;$${f2(toll)}&lt;/td&gt;&lt;/tr&gt;\n    &lt;tr&gt;&lt;td&gt;Toll revenue (per hour)&lt;/td&gt;&lt;td&gt;$${f0(toll * Ts)}&lt;/td&gt;&lt;/tr&gt;\n    &lt;tr&gt;&lt;td&gt;Deadweight loss with no toll (per hour, shaded)&lt;/td&gt;&lt;td&gt;$${f0(dwl)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;/tbody&gt;\n&lt;/table&gt;`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThings to try\n\nWith the starting values, confirm the midterm answers: 5,000 cars without a toll, 4,000 with a toll of $8, and a deadweight loss of $5,000 per hour.\nMake demand more elastic by lowering the demand slope \\(\\beta\\). Does the toll reduce traffic by more or less? Why does the deadweight loss change?\nRaise the congestion slope \\(b\\). What happens to the toll and to the deadweight loss? What kinds of roads have a steep \\(b\\)?\nDouble road capacity (set it to 2) without a toll. How much does traffic grow, and how much does the cost per trip fall? Compare with the fundamental law below.\nDrivers who stay on the road after the toll pay the toll and enjoy a faster trip. With the starting values, compare their full cost per trip with and without the toll. Are they better or worse off before the toll revenue is spent?",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Traffic Congestion"
+    ]
+  },
+  {
+    "objectID": "congestion.html#what-the-evidence-says",
+    "href": "congestion.html#what-the-evidence-says",
+    "title": "Traffic Congestion",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nNew lanes fill up. Duranton and Turner (2011) find that vehicle-kilometers traveled in U.S. metro areas rise roughly one-for-one with lane-kilometers of interstate highway. When capacity grows, residents drive more, trucks and businesses use the roads more, and people move in. In the simulation, adding capacity lowers the cost curves, and traffic grows along the demand curve. The more elastic demand is, the more the new capacity fills up and the less travel times improve.\nRide-hailing adds traffic. Tarduno (2021) uses the temporary exit of Uber and Lyft from Austin, Texas, in 2016 as a natural experiment and finds that traffic volumes fell after they left. Ride-hailing trips impose the same unpriced delay on other drivers as any other car.\nThe policy lesson from both papers: pricing the road changes behavior; adding capacity alone mostly invites more driving.",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Traffic Congestion"
+    ]
+  },
+  {
+    "objectID": "congestion.html#closer-to-home",
+    "href": "congestion.html#closer-to-home",
+    "title": "Traffic Congestion",
+    "section": "Closer to home",
+    "text": "Closer to home\nMaine’s congestion is modest by big-city standards, but it is concentrated: Portland’s peninsula at rush hour, the bridges between Lewiston and Auburn, and the Maine Turnpike on summer weekends.\n\nThe Maine Turnpike already charges tolls. Are they congestion tolls? What would a congestion toll on a summer Friday afternoon look like?\nSuppose Lewiston proposes widening a busy downtown street. Using the fundamental law, what would you expect to happen to traffic two or three years later?\n\n\nNetwork lens: roads are a network, not a single road\nThe model above looks at one road. Real trips run through a network of roads, and drivers switch routes when one gets crowded. Widening one road pulls traffic away from others, so part of the benefit shows up elsewhere in the network, and part disappears as the widened road fills up. Allen and Arkolakis (2022) build a model of route choice on the U.S. interstate system and on Seattle’s roads and find that the returns to improving individual road segments vary widely; accounting for congestion and rerouting changes which projects look best. A famous network puzzle, Braess’s paradox, shows that adding a road can even make everyone’s trip slower.",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Traffic Congestion"
+    ]
+  },
+  {
+    "objectID": "congestion.html#did-you-know",
+    "href": "congestion.html#did-you-know",
+    "title": "Traffic Congestion",
+    "section": "Did you know?",
+    "text": "Did you know?\nEconomist William Vickrey argued for road pricing beginning in the 1950s and 1960s, and later shared the 1996 Nobel Prize in economics. His ideas took decades to reach the street. Singapore began charging drivers to enter its downtown in 1975. London introduced a congestion charge in 2003, and Stockholm adopted one permanently in 2007 after a trial. In January 2025, New York City became the first U.S. city to charge drivers to enter its central business district.",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Traffic Congestion"
+    ]
+  },
+  {
+    "objectID": "congestion.html#practice-questions",
+    "href": "congestion.html#practice-questions",
+    "title": "Traffic Congestion",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nDerive the marginal social cost of a trip from \\(AC(T) = a + bT\\). Explain in words why \\(MC &gt; AC\\).\nUsing a graph, show the unpriced equilibrium, the efficient level of traffic, the toll, and the deadweight loss.\nExplain the fundamental law of road congestion and what it implies for a proposal to widen a congested highway.",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Traffic Congestion"
+    ]
+  },
+  {
+    "objectID": "sprawl.html",
+    "href": "sprawl.html",
+    "title": "Sprawl and Land-Use Controls",
+    "section": "",
+    "text": "Read: Brueckner, Chapter 4; Eid et al. (2008).",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Sprawl and Land-Use Controls"
+    ]
+  },
+  {
+    "objectID": "sprawl.html#the-model",
+    "href": "sprawl.html#the-model",
+    "title": "Sprawl and Land-Use Controls",
+    "section": "The model",
+    "text": "The model\nCities grow outward because, at the edge, land is worth more to a developer than to a farmer. That is efficient if prices reflect all costs and benefits. Brueckner identifies three market failures that make the market edge too far out:\n\nUnvalued open space. Farmland and woods at the fringe give nearby residents views, recreation, and habitat. The farmer’s rent \\(r_A\\) leaves this out, so land is converted too cheaply.\nUnpriced congestion. Drivers do not pay for the delay they impose on others (Traffic Congestion). Commuting feels cheaper than it really is, so people live too far out.\nUnpaid infrastructure costs. New subdivisions often pay the average cost of roads, pipes, and schools rather than the higher marginal cost of serving the fringe.\n\n\nMarket edge versus efficient edge\nTake an open city where residents earn \\(y\\), enjoy consumption \\(\\bar{c}\\) set by the outside option, and pay commuting cost \\(t\\) per mile. Urban land at distance \\(x\\) rents for \\(r(x) = y - \\bar{c} - t x\\), and the market city stops where this falls to \\(r_A\\):\n\\[\n\\bar{x}_{\\text{market}} = \\frac{y - \\bar{c} - r_A}{t}.\n\\]\nNow count the social costs: each mile of commuting also imposes a congestion cost \\(e\\) on others, and each lot of farmland has an open-space value \\(v\\). The efficient edge is where the social value of urban land equals the social value of farmland:\n\\[\n\\bar{x}_{\\text{efficient}} = \\frac{y - \\bar{c} - r_A - v}{t + e}.\n\\]\nBoth corrections pull the efficient edge inward. The gap is excess sprawl.\n\n\nFixing it\nThe best remedy targets the failure directly: a congestion toll for unpriced driving, an open-space or development tax (or public purchase of land) for lost open space, and impact fees for infrastructure. A blunter tool is an urban growth boundary, which caps the edge directly but does not distinguish among the reasons for sprawl.",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Sprawl and Land-Use Controls"
+    ]
+  },
+  {
+    "objectID": "sprawl.html#simulation",
+    "href": "sprawl.html#simulation",
+    "title": "Sprawl and Land-Use Controls",
+    "section": "Simulation",
+    "text": "Simulation\n\n\n\nShow the simulation code\nviewof tS = Inputs.range([500, 3000], {value: 1500, step: 50, label: \"Commuting cost drivers pay, t ($ per mile per yr)\"})\nviewof e = Inputs.range([0, 1500], {value: 300, step: 50, label: \"Unpriced congestion cost, e ($ per mile per yr)\"})\nviewof v = Inputs.range([0, 4000], {value: 1000, step: 100, label: \"Open-space value of farmland, v ($ per lot per yr)\"})\nviewof netY = Inputs.range([5000, 20000], {value: 9000, step: 250, label: \"Income left for land, y − c̄ − rA ($ per lot per yr)\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nxMarket = netY / tS\nxEff = Math.max((netY - v) / (tS + e), 0)\nexcess = xMarket - xEff\narea = r =&gt; Math.PI * r * r\nxmaxS = xMarket * 1.2\nrowsS = d3.range(0, xmaxS, xmaxS / 200)\nPlot.plot({\n  height: 340, marginLeft: 70,\n  x: {label: \"Distance from the CBD (miles) →\", domain: [0, xmaxS]},\n  y: {label: \"↑ Value of land in urban use, above farm rent ($)\", grid: true},\n  color: {legend: true, domain: [\"Private value (what developers see)\", \"Social value (counts congestion)\", \"Open-space value v\"], range: [\"#2b6cb0\", \"#881124\", \"#4a7c3a\"]},\n  marks: [\n    Plot.ruleY([0]),\n    Plot.line(rowsS, {x: d =&gt; d, y: d =&gt; netY - tS * d, stroke: () =&gt; \"Private value (what developers see)\", strokeWidth: 2}),\n    Plot.line(rowsS, {x: d =&gt; d, y: d =&gt; netY - (tS + e) * d, stroke: () =&gt; \"Social value (counts congestion)\", strokeWidth: 2}),\n    Plot.ruleY([v], {stroke: \"#4a7c3a\", strokeWidth: 2, strokeDasharray: \"5,4\"}),\n    Plot.ruleX([xMarket], {stroke: \"#2b6cb0\", strokeOpacity: 0.5}),\n    Plot.ruleX([xEff], {stroke: \"#881124\", strokeOpacity: 0.5}),\n    Plot.text([{x: xMarket}], {x: \"x\", y: netY * 0.9, text: () =&gt; \"market edge\", textAnchor: \"end\", dx: -4}),\n    Plot.text([{x: xEff}], {x: \"x\", y: netY * 0.8, text: () =&gt; \"efficient edge\", textAnchor: \"end\", dx: -4})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nhtml`&lt;table class=\"table table-sm readout\"&gt;&lt;tbody&gt;\n  &lt;tr&gt;&lt;td&gt;Market edge (miles)&lt;/td&gt;&lt;td&gt;${xMarket.toFixed(2)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Efficient edge (miles)&lt;/td&gt;&lt;td&gt;${xEff.toFixed(2)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Excess sprawl (miles)&lt;/td&gt;&lt;td&gt;${excess.toFixed(2)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Urban land area: market versus efficient (sq. miles)&lt;/td&gt;&lt;td&gt;${area(xMarket).toFixed(0)} vs ${area(xEff).toFixed(0)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Share of the market city's land that should have stayed open&lt;/td&gt;&lt;td&gt;${(100 * (1 - area(xEff) / area(xMarket))).toFixed(0)}%&lt;/td&gt;&lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;`\n\n\n\n\n\n\n\n\n\nThings to try\n\nSet \\(e = 0\\) and \\(v = 0\\). Why do the two edges coincide? What does this say about sprawl when prices are right?\nTurn on only the congestion externality \\(e\\). How much does the efficient edge move in? Which policy fixes this failure?\nTurn on only the open-space value \\(v\\). Which policy fixes this one?\nBecause land area grows with the square of the radius, a small excess in miles can mean a large excess in land. Find settings where excess sprawl is under one mile but more than a quarter of the city’s land should have stayed open.\nAn urban growth boundary set at the efficient edge would stop the sprawl. What would it do to land rents inside the boundary, and who would gain?",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Sprawl and Land-Use Controls"
+    ]
+  },
+  {
+    "objectID": "sprawl.html#what-the-evidence-says",
+    "href": "sprawl.html#what-the-evidence-says",
+    "title": "Sprawl and Land-Use Controls",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nCritics of sprawl often point to health: people in sprawling neighborhoods drive more, walk less, and are heavier on average. Eid et al. (2008) ask whether sprawl causes weight gain or whether people who are already prone to it choose sprawling neighborhoods. Following the same individuals over time as they move between more and less sprawling places, they find no evidence that sprawl causes weight gain; the correlation reflects sorting. The lesson for policy: the case against sprawl rests on the market failures above, not on health.",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Sprawl and Land-Use Controls"
+    ]
+  },
+  {
+    "objectID": "sprawl.html#closer-to-home",
+    "href": "sprawl.html#closer-to-home",
+    "title": "Sprawl and Land-Use Controls",
+    "section": "Closer to home",
+    "text": "Closer to home\n\nMaine’s 1988 Growth Management Act encourages towns to plan for designated growth areas. Which of the three market failures does growth-area planning address?\nPicture new subdivisions along the roads out of Lewiston–Auburn or Portland. Who pays for the new roads, school buses, and water lines?\n\n\nNetwork lens: highways as spokes of a network\nSprawl follows the transportation network. Baum-Snow (2007) asks how much of postwar suburbanization was caused by the interstate highway system. Because highways were not built at random, he uses the 1947 national highway plan to predict where highway “rays” would run through central cities. He finds that each additional ray reduced central-city population by roughly 18 percent. In the model, a new highway is a lower \\(t\\) along one spoke of the network, and the city stretches out along it.",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Sprawl and Land-Use Controls"
+    ]
+  },
+  {
+    "objectID": "sprawl.html#did-you-know",
+    "href": "sprawl.html#did-you-know",
+    "title": "Sprawl and Land-Use Controls",
+    "section": "Did you know?",
+    "text": "Did you know?\nOregon’s 1973 land-use law required its cities to draw urban growth boundaries, and the Portland, Oregon, metro area adopted its boundary in 1979. It remains the best-known growth boundary in the United States and a common case study in debates over whether boundaries raise housing prices.",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Sprawl and Land-Use Controls"
+    ]
+  },
+  {
+    "objectID": "sprawl.html#practice-questions",
+    "href": "sprawl.html#practice-questions",
+    "title": "Sprawl and Land-Use Controls",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nName the three market failures that can cause excessive sprawl, and match each with a policy that targets it.\nUsing a graph of land value against distance, show the market edge and the efficient edge when there is unpriced congestion.\nExplain the identification problem in studying sprawl and obesity, and how Eid et al. (2008) address it.",
+    "crumbs": [
+      "Land Use and Transportation",
+      "Sprawl and Land-Use Controls"
+    ]
+  },
+  {
+    "objectID": "housing-policy.html",
+    "href": "housing-policy.html",
+    "title": "Housing Policy",
+    "section": "",
+    "text": "Read: Brueckner, Chapter 7; Ellen (2020); Diamond et al. (2019).",
+    "crumbs": [
+      "Housing",
+      "Housing Policy"
+    ]
+  },
+  {
+    "objectID": "housing-policy.html#the-model",
+    "href": "housing-policy.html#the-model",
+    "title": "Housing Policy",
+    "section": "The model",
+    "text": "The model\nGovernments help renters in two main ways: by limiting rents and by paying part of the rent. Simple economics gives sharp predictions about both, and recent research adds important nuance.\n\nRent control\nA rent ceiling below the market rent has three effects in the basic supply-and-demand model:\n\nA shortage. At the lower rent, more people want apartments and landlords offer fewer.\nA transfer. Tenants who keep a controlled apartment pay less; that money comes out of landlords’ pockets.\nA deadweight loss. Apartments that renters value more than they cost to supply are no longer offered.\n\nBecause price no longer rations apartments, something else does: waiting lists, connections, or lower maintenance. Tenants also stay put longer, since leaving means losing the controlled rent.\n\n\nVouchers versus public housing\nA housing voucher pays part of a family’s rent in a private apartment of their choosing. Public housing offers a specific unit. In a budget-constraint diagram, a voucher shifts the budget line out, while public housing offers one fixed bundle on that same line. So a family is at least as well off with a voucher of equal cost, and usually better off, because it can choose. Governments may still prefer in-kind help to make sure aid is spent on housing or to add housing where it is scarce.",
+    "crumbs": [
+      "Housing",
+      "Housing Policy"
+    ]
+  },
+  {
+    "objectID": "housing-policy.html#simulation",
+    "href": "housing-policy.html#simulation",
+    "title": "Housing Policy",
+    "section": "Simulation",
+    "text": "Simulation\nQuantity is in thousands of apartments, rent in dollars per month. The starting values match Problem B1 on Midterm 2.\n\n\n\nShow the simulation code\nviewof ceiling = Inputs.range([500, 1200], {value: 800, step: 10, label: \"Rent ceiling ($ per month)\"})\nviewof dInt = Inputs.range([60, 140], {value: 100, step: 1, label: \"Demand: Qd = intercept − 0.04 P. Intercept\"})\nviewof sSlope = Inputs.range([0.02, 0.2], {value: 0.08, step: 0.005, label: \"Supply: Qs = −20 + slope × P. Slope\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nPe = (dInt + 20) / (0.04 + sSlope)          // market rent\nQe = dInt - 0.04 * Pe\nbinding = ceiling &lt; Pe\nQs = binding ? Math.max(-20 + sSlope * ceiling, 0) : Qe\nQd = binding ? dInt - 0.04 * ceiling : Qe\nPdAtQs = (dInt - Qs) / 0.04                 // what renters would pay for the last apartment supplied\nPsAtQs = (Qs + 20) / sSlope                 // what it costs landlords to supply it\ndwlRC = binding ? 0.5 * (Qe - Qs) * (PdAtQs - PsAtQs) : 0\ntransfer = binding ? (Pe - ceiling) * Qs : 0\nQgrid = d3.range(0, dInt, dInt / 200)\nPlot.plot({\n  height: 340, marginLeft: 60,\n  x: {label: \"Apartments (thousands) →\", domain: [0, dInt]},\n  y: {label: \"↑ Rent ($ per month)\", domain: [0, Math.min(dInt / 0.04, Pe * 2.2)], grid: true},\n  color: {legend: true, domain: [\"Demand\", \"Supply\", \"Rent ceiling\"], range: [\"#333\", \"#2b6cb0\", \"#881124\"]},\n  marks: [\n    binding ? Plot.areaY(d3.range(Qs, Qe, (Qe - Qs) / 50).concat([Qe]), {x: q =&gt; q, y1: q =&gt; (q + 20) / sSlope, y2: q =&gt; (dInt - q) / 0.04, fill: \"#881124\", fillOpacity: 0.15}) : null,\n    Plot.line(Qgrid, {x: q =&gt; q, y: q =&gt; (dInt - q) / 0.04, stroke: () =&gt; \"Demand\", strokeWidth: 2}),\n    Plot.line(Qgrid, {x: q =&gt; q, y: q =&gt; (q + 20) / sSlope, stroke: () =&gt; \"Supply\", strokeWidth: 2}),\n    Plot.ruleY([ceiling], {stroke: () =&gt; \"Rent ceiling\", strokeWidth: 2, strokeDasharray: \"6,4\"}),\n    Plot.dot([{q: Qe, p: Pe}], {x: \"q\", y: \"p\", r: 5, fill: \"black\"})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nfr = d3.format(\",.1f\")\nfm = d3.format(\",.0f\")\nhtml`${binding ? \"\" : html`&lt;p&gt;&lt;strong&gt;The ceiling is above the market rent, so it has no effect.&lt;/strong&gt;&lt;/p&gt;`}\n&lt;table class=\"table table-sm readout\"&gt;&lt;tbody&gt;\n  &lt;tr&gt;&lt;td&gt;Market rent and quantity&lt;/td&gt;&lt;td&gt;$${fm(Pe)}, ${fr(Qe)} thousand&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Apartments supplied at the ceiling&lt;/td&gt;&lt;td&gt;${fr(Qs)} thousand&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Apartments demanded at the ceiling&lt;/td&gt;&lt;td&gt;${fr(Qd)} thousand&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Shortage&lt;/td&gt;&lt;td&gt;${fr(Qd - Qs)} thousand&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Monthly transfer from landlords to tenants who keep units&lt;/td&gt;&lt;td&gt;$${fr(transfer / 1000)} million&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Deadweight loss (per month, shaded)&lt;/td&gt;&lt;td&gt;$${fr(dwlRC / 1000)} million&lt;/td&gt;&lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThings to try\n\nWith the starting values, confirm the midterm answers: market rent $1,000, 44 thousand apartments supplied and 68 thousand demanded at $800, and a deadweight loss of $4.8 million per month.\nLower the ceiling step by step. Which grows faster: the transfer to tenants or the deadweight loss?\nMake supply more elastic (raise the slope). Is rent control more or less costly when landlords can easily convert or withdraw units? Connect this to the San Francisco evidence below.\nRaise demand (the intercept), as in a booming city, with the ceiling fixed. What happens to the shortage?",
+    "crumbs": [
+      "Housing",
+      "Housing Policy"
+    ]
+  },
+  {
+    "objectID": "housing-policy.html#what-the-evidence-says",
+    "href": "housing-policy.html#what-the-evidence-says",
+    "title": "Housing Policy",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nRent control in San Francisco. In 1994, San Francisco extended rent control to small multifamily buildings built before 1980, while similar buildings built after 1980 stayed uncontrolled. Diamond et al. (2019) compare the two groups. Tenants in newly covered buildings were much more likely to stay in their homes and in the city, a real benefit the simple model misses. But landlords of covered buildings cut the supply of rental housing by about 15 percent, by converting units to condominiums, moving in themselves, or redeveloping. Less rental housing pushed up rents for everyone else.\nHousing vouchers. Ellen (2020) reviews what we know about the Housing Choice Voucher program. Vouchers reduce homelessness, crowding, and rent burdens. But many voucher holders still live in relatively poor neighborhoods, and only a fraction of eligible families receive a voucher at all. Reforms that help families reach a wider range of neighborhoods are an active area of policy.",
+    "crumbs": [
+      "Housing",
+      "Housing Policy"
+    ]
+  },
+  {
+    "objectID": "housing-policy.html#closer-to-home",
+    "href": "housing-policy.html#closer-to-home",
+    "title": "Housing Policy",
+    "section": "Closer to home",
+    "text": "Closer to home\n\nIn 2020, Portland voters approved a rent control ordinance that limits annual rent increases for many apartments. Using the simulation and the San Francisco evidence, what would you predict for Portland’s rental supply over the next decade? What would you want to measure?\nLewiston has many older multifamily buildings. Would a voucher or rent control do more for low-income renters there? Why?\n\n\nNetwork lens: vouchers and social ties\nWhere a voucher gets used depends on more than rent and housing quality. Families often look for apartments near relatives and friends who help with childcare, transportation, and job leads, and landlords often fill units through word of mouth. A voucher that technically allows a move to a high-opportunity neighborhood may go unused if a family’s support network lives elsewhere. Thinking of housing search as moving within a social network helps explain why mobility counseling and landlord outreach can matter as much as the dollar value of the subsidy.",
+    "crumbs": [
+      "Housing",
+      "Housing Policy"
+    ]
+  },
+  {
+    "objectID": "housing-policy.html#did-you-know",
+    "href": "housing-policy.html#did-you-know",
+    "title": "Housing Policy",
+    "section": "Did you know?",
+    "text": "Did you know?\nThe Swedish economist Assar Lindbeck famously quipped that, short of bombing, rent control may be the most efficient way to destroy a city. Economists still largely agree on the supply effects, but the San Francisco evidence shows why the debate continues: rent control also protects incumbent tenants from displacement.",
+    "crumbs": [
+      "Housing",
+      "Housing Policy"
+    ]
+  },
+  {
+    "objectID": "housing-policy.html#practice-questions",
+    "href": "housing-policy.html#practice-questions",
+    "title": "Housing Policy",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nUsing a graph, show the shortage, transfer, and deadweight loss from a binding rent ceiling.\nWhat did Diamond et al. (2019) find about tenants and about rental supply? How do the findings compare with the simple model?\nUsing a budget-constraint diagram, explain why a voucher makes a family at least as well off as public housing of equal cost.",
+    "crumbs": [
+      "Housing",
+      "Housing Policy"
+    ]
+  },
+  {
+    "objectID": "place-based.html",
+    "href": "place-based.html",
+    "title": "Place-Based Policy",
+    "section": "",
+    "text": "Read: Austin et al. (2018). Optional: Moretti (2010).",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Place-Based Policy"
+    ]
+  },
+  {
+    "objectID": "place-based.html#the-model",
+    "href": "place-based.html#the-model",
+    "title": "Place-Based Policy",
+    "section": "The model",
+    "text": "The model\nSome policies help people wherever they live: tax credits, job training, health insurance. Others help places: tax breaks for firms that locate in a struggling town, infrastructure grants, enterprise zones. Place-based policies are popular with politicians but controversial among economists. Why?\n\nThe case against: benefits get capitalized\nIn a spatial equilibrium, people move until no place is better than another. If a policy makes a town more attractive, newcomers arrive and bid up rents. When people move easily and housing is hard to build, much of the gain ends up in landowners’ pockets rather than with the workers the policy meant to help. Subsidizing places can also pull jobs from one town to another without creating any new jobs overall.\n\n\nThe case for: local multipliers and non-employment\nTwo arguments push the other way.\n\nLocal multipliers. A new job in a tradable industry, one that sells outside the town, such as manufacturing or software, brings income into the local economy. That income supports additional non-tradable jobs: restaurants, stores, contractors, dentists. If each new tradable job supports \\(m\\) local jobs, the total job gain is\n\n\\[\n\\text{total jobs} = J\\,(1 + m).\n\\]\n\nWhere jobs matter most. If places differ in how much jobs reduce non-employment and its harms, then putting jobs where the response is largest can raise overall well-being. This is the core argument in Austin et al. (2018).",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Place-Based Policy"
+    ]
+  },
+  {
+    "objectID": "place-based.html#simulation",
+    "href": "place-based.html#simulation",
+    "title": "Place-Based Policy",
+    "section": "Simulation",
+    "text": "Simulation\nA state offers a subsidy to attract new tradable jobs to a town. How many jobs does it create in total, and what does each job cost?\n\n\n\nShow the simulation code\nviewof J = Inputs.range([0, 2000], {value: 500, step: 50, label: \"New tradable jobs attracted, J\"})\nviewof mLocal = Inputs.range([0, 3], {value: 1.6, step: 0.1, label: \"Local multiplier, m (local jobs per tradable job)\"})\nviewof subsidy = Inputs.range([0, 200000], {value: 50000, step: 5000, label: \"Subsidy per tradable job ($)\"})\nviewof wouldCome = Inputs.range([0, 100], {value: 30, step: 5, label: \"Share of jobs that would have come anyway (%)\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nnewJ = J * (1 - wouldCome / 100)              // jobs that exist only because of the subsidy\nlocalJ = newJ * mLocal\ntotalJ = newJ + localJ\ncost = J * subsidy                             // the subsidy is paid on every job, including those that would have come anyway\nPlot.plot({\n  height: 200, marginLeft: 220,\n  x: {label: \"Jobs →\", grid: true, zero: true},\n  y: {label: null},\n  marks: [\n    Plot.barX([\n      {k: \"Jobs that would have come anyway\", v: J - newJ},\n      {k: \"New tradable jobs\", v: newJ},\n      {k: \"New local service jobs\", v: localJ}\n    ], {x: \"v\", y: \"k\", fill: d =&gt; d.k.startsWith(\"New local\") ? \"#881124\" : d.k.startsWith(\"New\") ? \"#2b6cb0\" : \"#bbb\"})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nfj = d3.format(\",.0f\")\nhtml`&lt;table class=\"table table-sm readout\"&gt;&lt;tbody&gt;\n  &lt;tr&gt;&lt;td&gt;Total program cost&lt;/td&gt;&lt;td&gt;$${fj(cost)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Jobs created by the subsidy (tradable + local)&lt;/td&gt;&lt;td&gt;${fj(totalJ)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Cost per job actually created&lt;/td&gt;&lt;td&gt;${totalJ &gt; 0 ? \"$\" + fj(cost / totalJ) : \"n/a\"}&lt;/td&gt;&lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThings to try\n\nSet the multiplier to 0. What is the cost per job created? Now set it to 1.6. How much cheaper does each job become?\nRaise the share of jobs that would have come anyway to 70 percent. What happens to the cost per job? Why is this the hardest number for a state to know?\nSuppose the jobs are high-tech and the multiplier is 2.5. Is a larger subsidy justified?\nThe simulation ignores capitalization. If new workers move in and bid up rents, who captures part of the gain?",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Place-Based Policy"
+    ]
+  },
+  {
+    "objectID": "place-based.html#what-the-evidence-says",
+    "href": "place-based.html#what-the-evidence-says",
+    "title": "Place-Based Policy",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nLocal multipliers. Moretti (2010) estimates how many local jobs follow each new tradable job across U.S. cities. He finds that each additional manufacturing job is associated with about 1.6 additional jobs in the local non-tradable sector, and that the multiplier is larger for skilled and high-tech jobs.\nJobs for the heartland. Austin et al. (2018) document that non-employment among prime-age men has become concentrated in parts of the eastern United States and argue that place-based policies can be justified where employment responds most strongly to policy. They favor policies that encourage employment, such as targeted employment subsidies, over policies that simply move jobs between places.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Place-Based Policy"
+    ]
+  },
+  {
+    "objectID": "place-based.html#closer-to-home",
+    "href": "place-based.html#closer-to-home",
+    "title": "Place-Based Policy",
+    "section": "Closer to home",
+    "text": "Closer to home\n\nLewiston–Auburn and many mill towns lost tradable manufacturing jobs over the past century. Using the multiplier logic, what happened to local service jobs when the mills closed?\nMaine uses tax incentives to attract and keep businesses. Pick one program and ask: how many of the subsidized jobs would have come anyway?\n\n\nNetwork lens: towns are nodes in a regional network\nLewiston–Auburn is linked to Portland by commuters, freight, and social ties. A job created in Portland can raise employment in Lewiston–Auburn through commuting, and a subsidy in one town can draw workers and businesses from its neighbors. Treating towns as nodes in a regional network, rather than islands, helps answer two questions that place-based policy often ignores: who actually fills the new jobs, and how much of the gain spills over to, or is taken from, nearby places.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Place-Based Policy"
+    ]
+  },
+  {
+    "objectID": "place-based.html#did-you-know",
+    "href": "place-based.html#did-you-know",
+    "title": "Place-Based Policy",
+    "section": "Did you know?",
+    "text": "Did you know?\nOne of the largest place-based programs in U.S. history was the Tennessee Valley Authority, created in 1933 during the New Deal to build dams, bring electricity, and develop industry across one of the country’s poorest regions. Economists still study it to learn whether a large, temporary push can permanently change a region’s economy.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Place-Based Policy"
+    ]
+  },
+  {
+    "objectID": "place-based.html#practice-questions",
+    "href": "place-based.html#practice-questions",
+    "title": "Place-Based Policy",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nExplain the difference between people-based and place-based policy, and give an example of each.\nExplain the local multiplier and why it depends on whether a job is tradable.\nWhy might the benefits of a place-based subsidy end up with landowners rather than workers?",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Place-Based Policy"
+    ]
+  },
+  {
+    "objectID": "housing-supply.html",
+    "href": "housing-supply.html",
+    "title": "Housing Supply and Affordability",
+    "section": "",
+    "text": "Read: Glaeser and Gyourko (2018); Saiz (2010).",
+    "crumbs": [
+      "Housing",
+      "Housing Supply and Affordability"
+    ]
+  },
+  {
+    "objectID": "housing-supply.html#the-model",
+    "href": "housing-supply.html#the-model",
+    "title": "Housing Supply and Affordability",
+    "section": "The model",
+    "text": "The model\nWhen more people want to live in a city, two things can happen: builders add homes, or prices rise. Which one wins depends on the price elasticity of housing supply, \\(\\varepsilon_S\\): the percentage increase in the housing stock when prices rise 1 percent.\n\nSupply, demand, and elasticities\nWith constant-elasticity supply and demand, if demand rises by \\(X\\) percent (at every price, people want \\(X\\) percent more housing), the new equilibrium satisfies\n\\[\n\\%\\Delta P \\approx \\frac{X}{\\varepsilon_S + \\varepsilon_D}, \\qquad \\%\\Delta Q \\approx \\varepsilon_S \\cdot \\%\\Delta P,\n\\]\nwhere \\(\\varepsilon_D\\) is the (absolute) price elasticity of demand. When supply is elastic, the boom shows up mostly as new homes. When supply is inelastic, it shows up mostly as higher prices.\n\n\nWhat makes supply inelastic?\n\nGeography. Water, wetlands, and steep slopes leave less land to build on.\nRegulation. Zoning, minimum lot sizes, height limits, parking requirements, and slow permitting raise the cost of adding homes.\n\n\n\nPrices versus construction costs\nA useful test: compare home prices with the minimum profitable production cost, what it costs to build a home plus a normal profit and a modest amount of land. If prices sit far above that cost for years, something is preventing builders from adding homes, which economists often interpret as an implicit “regulatory tax.”",
+    "crumbs": [
+      "Housing",
+      "Housing Supply and Affordability"
+    ]
+  },
+  {
+    "objectID": "housing-supply.html#simulation",
+    "href": "housing-supply.html#simulation",
+    "title": "Housing Supply and Affordability",
+    "section": "Simulation",
+    "text": "Simulation\nPrices and quantities start at 100 (index values). Increase demand and see how the outcome depends on supply elasticity.\n\n\n\nShow the simulation code\nviewof X = Inputs.range([0, 40], {value: 20, step: 1, label: \"Increase in housing demand, X (%)\"})\nviewof eS = Inputs.range([0.1, 5], {value: 0.5, step: 0.1, label: \"Supply elasticity, εS\"})\nviewof eD = Inputs.range([0.2, 1.5], {value: 0.7, step: 0.05, label: \"Demand elasticity, εD (absolute value)\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nP1 = 100 * Math.pow(1 + X / 100, 1 / (eS + eD))\nQ1 = 100 * Math.pow(P1 / 100, eS)\nPgrid = d3.range(60, 200, 1)\nPlot.plot({\n  height: 340, marginLeft: 50,\n  x: {label: \"Housing quantity (index) →\", domain: [60, 200]},\n  y: {label: \"↑ Price (index)\", domain: [60, 200], grid: true},\n  color: {legend: true, domain: [\"Supply\", \"Demand before\", \"Demand after\"], range: [\"#2b6cb0\", \"#999\", \"#881124\"]},\n  marks: [\n    Plot.line(Pgrid, {x: p =&gt; 100 * Math.pow(p / 100, eS), y: p =&gt; p, stroke: () =&gt; \"Supply\", strokeWidth: 2.5}),\n    Plot.line(Pgrid, {x: p =&gt; 100 * Math.pow(p / 100, -eD), y: p =&gt; p, stroke: () =&gt; \"Demand before\", strokeDasharray: \"5,4\"}),\n    Plot.line(Pgrid, {x: p =&gt; 100 * (1 + X / 100) * Math.pow(p / 100, -eD), y: p =&gt; p, stroke: () =&gt; \"Demand after\", strokeWidth: 2.5}),\n    Plot.dot([{q: 100, p: 100}, {q: Q1, p: P1}], {x: \"q\", y: \"p\", r: 5, fill: \"black\"})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nhtml`&lt;table class=\"table table-sm readout\"&gt;&lt;tbody&gt;\n  &lt;tr&gt;&lt;td&gt;Price change&lt;/td&gt;&lt;td&gt;+${(P1 - 100).toFixed(1)}%&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Change in the housing stock&lt;/td&gt;&lt;td&gt;+${(Q1 - 100).toFixed(1)}%&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Share of the demand boom that shows up as new housing&lt;/td&gt;&lt;td&gt;${X &gt; 0 ? (100 * Math.log(Q1 / 100) / Math.log(1 + X / 100)).toFixed(0) + \"%\" : \"n/a\"}&lt;/td&gt;&lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;`\n\n\n\n\n\n\n\n\n\nThings to try\n\nHold demand growth at 20 percent. Compare supply elasticity 0.3 (a tightly constrained coastal city) with 3 (a fast-growing Sun Belt city). How different are the price increases?\nIn the constrained case, how big a demand boom does it take to raise prices by 25 percent?\nMake demand more elastic. Why does that soften the price increase?\nA city loosens zoning so that supply elasticity doubles. Using the simulation, describe what happens the next time demand rises.",
+    "crumbs": [
+      "Housing",
+      "Housing Supply and Affordability"
+    ]
+  },
+  {
+    "objectID": "housing-supply.html#what-the-evidence-says",
+    "href": "housing-supply.html#what-the-evidence-says",
+    "title": "Housing Supply and Affordability",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nGeography and regulation together. Saiz (2010) measures how much land within reach of each U.S. metro area’s center is lost to water and steep slopes, using satellite and elevation data. Metros with more unbuildable land have less elastic housing supply, and those same metros also tend to have stricter land-use regulation. Supply elasticity, in turn, shapes whether demand growth shows up as price growth or as new homes.\nPrices far above building costs. Glaeser and Gyourko (2018) compare home prices with the minimum profitable production cost. In most of the United States, prices are close to that cost. In a set of high-demand, mostly coastal metros, they are far above it, which points to regulation rather than construction costs as the main reason housing is expensive there. They also argue that restrictions in productive cities keep workers out of the places where they would earn the most.",
+    "crumbs": [
+      "Housing",
+      "Housing Supply and Affordability"
+    ]
+  },
+  {
+    "objectID": "housing-supply.html#closer-to-home",
+    "href": "housing-supply.html#closer-to-home",
+    "title": "Housing Supply and Affordability",
+    "section": "Closer to home",
+    "text": "Closer to home\n\nPortland, Maine, sits on a peninsula, with Casco Bay and Back Cove limiting buildable land near downtown. Which part of Saiz’s measure does that resemble?\nMaine passed a 2022 law that requires towns to allow more types of housing, such as accessory dwelling units, in many areas. In the simulation, what would that do to \\(\\varepsilon_S\\), and what would you expect to happen to prices?\n\n\nNetwork lens: housing markets are linked by commutes\nA city’s housing market is not an island. Commuting networks tie Portland to South Portland, Westbrook, Scarborough, and towns farther out, and tie Lewiston–Auburn to Portland and Augusta. When building is constrained in the center, demand spills along the commuting links into surrounding towns, raising prices there and lengthening commutes. Mapping commuting flows (for example, from Census commuting data) shows which towns are part of the same housing market and where new housing would relieve the most pressure.",
+    "crumbs": [
+      "Housing",
+      "Housing Supply and Affordability"
+    ]
+  },
+  {
+    "objectID": "housing-supply.html#did-you-know",
+    "href": "housing-supply.html#did-you-know",
+    "title": "Housing Supply and Affordability",
+    "section": "Did you know?",
+    "text": "Did you know?\nThe idea that land-use regulation acts like a tax on new housing goes back decades, but Glaeser and Gyourko’s comparison of prices with construction costs made it measurable for every metro area, and it now shapes debates over zoning reform across the country.",
+    "crumbs": [
+      "Housing",
+      "Housing Supply and Affordability"
+    ]
+  },
+  {
+    "objectID": "housing-supply.html#practice-questions",
+    "href": "housing-supply.html#practice-questions",
+    "title": "Housing Supply and Affordability",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nUsing supply and demand, show why the same increase in demand raises prices more in a city with inelastic supply.\nWhat two factors make housing supply inelastic, according to Saiz (2010)? How are they related?\nExplain the logic of comparing home prices with the minimum profitable production cost.",
+    "crumbs": [
+      "Housing",
+      "Housing Supply and Affordability"
+    ]
+  },
+  {
+    "objectID": "neighborhoods.html",
+    "href": "neighborhoods.html",
+    "title": "Local Public Goods and Neighborhoods",
+    "section": "",
+    "text": "Read: Brueckner, Chapter 8; Boustan (2013); Chetty et al. (2016).",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Local Public Goods and Neighborhoods"
+    ]
+  },
+  {
+    "objectID": "neighborhoods.html#the-model",
+    "href": "neighborhoods.html#the-model",
+    "title": "Local Public Goods and Neighborhoods",
+    "section": "The model",
+    "text": "The model\nSchools, parks, police, and trash pickup are mostly provided by local governments and paid for with local property taxes. Because people can choose where to live, they can also choose their package of public services and taxes.\n\nTiebout sorting\nCharles Tiebout argued that when there are many towns, households “vote with their feet,” sorting into the town whose mix of services and taxes best matches what they want. With enough towns, this can provide local public goods efficiently, something a single national government struggles to do because it cannot easily learn how much each person values them.\nThe argument needs strong assumptions: many towns to choose among, people who can move easily, no spillovers between towns, and taxes that work like a price for services. Property taxes break the last assumption: a family in a small house pays less tax than a neighbor in a large house but uses the same schools. Zoning, such as minimum lot sizes, keeps out lower-tax households and restores the link between taxes and services, but at the cost of excluding families with less income.\n\n\nCapitalization\nIf a town’s schools are better or its taxes are lower, families bid more for homes there. The advantage gets built into house prices. If a home comes with a benefit worth \\(B\\) dollars per year forever, and buyers discount the future at interest rate \\(r\\), the price premium is\n\\[\n\\Delta P = \\frac{B}{r}.\n\\]\nCapitalization means that whoever owns the home when the improvement is announced collects the gain. Later buyers pay for the better schools in the price.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Local Public Goods and Neighborhoods"
+    ]
+  },
+  {
+    "objectID": "neighborhoods.html#simulation",
+    "href": "neighborhoods.html#simulation",
+    "title": "Local Public Goods and Neighborhoods",
+    "section": "Simulation",
+    "text": "Simulation\nHow much is a better school district worth in the price of a home?\n\n\n\nShow the simulation code\nviewof benefit = Inputs.range([0, 6000], {value: 2000, step: 100, label: \"Yearly value of better schools or lower taxes, B ($)\"})\nviewof rDisc = Inputs.range([2, 10], {value: 5, step: 0.25, label: \"Interest (discount) rate, r (%)\"})\nviewof years = Inputs.range([5, 100], {value: 100, step: 5, label: \"Years the advantage is expected to last\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nr = rDisc / 100\npv = n =&gt; benefit * (1 - Math.pow(1 + r, -n)) / r        // present value of B per year for n years\npremium = pv(years)\nperpetuity = benefit / r\nPlot.plot({\n  height: 300, marginLeft: 70,\n  x: {label: \"Years the advantage lasts →\", domain: [0, 100]},\n  y: {label: \"↑ Price premium ($)\", grid: true, zero: true},\n  marks: [\n    Plot.line(d3.range(0, 101), {x: n =&gt; n, y: pv, stroke: \"#881124\", strokeWidth: 3}),\n    Plot.ruleY([perpetuity], {stroke: \"#888\", strokeDasharray: \"5,4\"}),\n    Plot.dot([{n: years, v: premium}], {x: \"n\", y: \"v\", r: 6, fill: \"#881124\"})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nfp = d3.format(\",.0f\")\nhtml`&lt;table class=\"table table-sm readout\"&gt;&lt;tbody&gt;\n  &lt;tr&gt;&lt;td&gt;Price premium for this home&lt;/td&gt;&lt;td&gt;$${fp(premium)}&lt;/td&gt;&lt;/tr&gt;\n  &lt;tr&gt;&lt;td&gt;Premium if the advantage lasts forever, B / r (dashed line)&lt;/td&gt;&lt;td&gt;$${fp(perpetuity)}&lt;/td&gt;&lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThings to try\n\nWith \\(B = \\$2{,}000\\) and \\(r = 5\\%\\), how much more is a home in the better district worth? Who gains when the district first improves?\nLower the interest rate. Why do capitalized premiums get larger when rates fall?\nSuppose people expect the advantage to last only 15 years (for example, a temporary tax break). How much smaller is the premium?\nA renter moves into the better district after the improvement. Do they get the better schools for free? Who pays?",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Local Public Goods and Neighborhoods"
+    ]
+  },
+  {
+    "objectID": "neighborhoods.html#what-the-evidence-says",
+    "href": "neighborhoods.html#what-the-evidence-says",
+    "title": "Local Public Goods and Neighborhoods",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nPaying to live in a richer town. Boustan (2013) compares homes on either side of municipal borders, where neighborhoods look similar but the town differs. Homes on the side of a higher-income town sell for more. She asks how much of that premium reflects local public goods and fiscal advantages, a direct test of Tiebout-style sorting and capitalization.\nDo neighborhoods change children’s futures? In the Moving to Opportunity experiment, families in high-poverty public housing were randomly offered housing vouchers, some of which could be used only in low-poverty neighborhoods. Chetty et al. (2016) follow the children into adulthood. Children who moved to lower-poverty neighborhoods when young, before about age 13, had higher earnings and college attendance as adults; those who moved as teenagers did not benefit. The longer a child spends in a better neighborhood, the larger the gain. Because the offers were random, these are causal effects of place.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Local Public Goods and Neighborhoods"
+    ]
+  },
+  {
+    "objectID": "neighborhoods.html#closer-to-home",
+    "href": "neighborhoods.html#closer-to-home",
+    "title": "Local Public Goods and Neighborhoods",
+    "section": "Closer to home",
+    "text": "Closer to home\n\nMaine funds schools through a mix of local property taxes and state aid. Look up the school budgets and tax rates of Lewiston, Auburn, and a nearby suburb. What would Tiebout predict about who lives where?\nTwo Maine towns with similar homes have different school ratings. How would you use home sale prices to estimate what families pay for the difference?\n\n\nNetwork lens: who you know, not just where you live\nNeighborhoods matter partly because of the social networks they create. Chetty et al. (2022) use billions of Facebook friendships to measure economic connectedness: how many higher-income friends people with lower incomes have. Across U.S. counties and ZIP codes, economic connectedness is the strongest predictor of upward mobility among the social-capital measures they study. These are associations, not causal estimates, but they suggest that part of what Moving to Opportunity changed was the networks children grew up in.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Local Public Goods and Neighborhoods"
+    ]
+  },
+  {
+    "objectID": "neighborhoods.html#did-you-know",
+    "href": "neighborhoods.html#did-you-know",
+    "title": "Local Public Goods and Neighborhoods",
+    "section": "Did you know?",
+    "text": "Did you know?\nCharles Tiebout’s 1956 paper was a reply to Paul Samuelson, who had argued in 1954 that markets cannot reveal how much people value public goods. Tiebout’s answer, that moving between towns can reveal those values, became one of the most cited ideas in public and urban economics.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Local Public Goods and Neighborhoods"
+    ]
+  },
+  {
+    "objectID": "neighborhoods.html#practice-questions",
+    "href": "neighborhoods.html#practice-questions",
+    "title": "Local Public Goods and Neighborhoods",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nState the Tiebout model and its key assumptions. How do property taxes and zoning affect it?\nExplain capitalization and use \\(\\Delta P = B/r\\) to show who gains when a town’s schools improve.\nWhat did Chetty et al. (2016) find, and why does random assignment matter for interpreting it?",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Local Public Goods and Neighborhoods"
+    ]
+  },
+  {
+    "objectID": "quality-of-life.html",
+    "href": "quality-of-life.html",
+    "title": "Measuring Quality of Life",
+    "section": "",
+    "text": "Read: Brueckner, Chapter 11; Albouy (2016).",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Measuring Quality of Life"
+    ]
+  },
+  {
+    "objectID": "quality-of-life.html#the-model",
+    "href": "quality-of-life.html#the-model",
+    "title": "Measuring Quality of Life",
+    "section": "The model",
+    "text": "The model\nHow do you put a dollar value on sunshine, a coastline, or low crime? You can’t buy them directly, but you can see what people give up to have them. That is the idea behind quality-of-life rankings in urban economics.\n\nReading amenities from prices\nReturn to spatial equilibrium across cities (Why Cities Exist). If workers can move freely, then in every city\n\\[\nw_i - r_i + a_i = \\bar{V},\n\\]\nwhere \\(w_i\\) is the wage, \\(r_i\\) the cost of housing, and \\(a_i\\) the dollar value of the city’s amenities. Rearranging gives the value of amenities relative to other cities:\n\\[\na_i - a_j = (r_i - r_j) - (w_i - w_j).\n\\]\nA city has valuable amenities if people pay more for housing than its wages justify, or accept lower wages than its housing costs require. This framework comes from Roback (1982) and is the basis of modern quality-of-life indexes.\n\n\nProductivity versus quality of life\nThe same data reveal two different things. High wages and high housing costs mean firms value the place: it is productive. High housing costs with low wages mean households value the place: it is pleasant. Real indexes refine this with the share of income spent on housing, taxes, and the cost of other goods, but the logic is the same.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Measuring Quality of Life"
+    ]
+  },
+  {
+    "objectID": "quality-of-life.html#simulation",
+    "href": "quality-of-life.html#simulation",
+    "title": "Measuring Quality of Life",
+    "section": "Simulation",
+    "text": "Simulation\nEnter yearly wages and housing costs for two cities, and see what the model implies about how residents value their amenities.\n\n\n\nShow the simulation code\nviewof wA = Inputs.range([30000, 120000], {value: 62000, step: 500, label: \"City A: average wage ($/yr)\"})\nviewof rA_ = Inputs.range([6000, 48000], {value: 18000, step: 250, label: \"City A: housing cost ($/yr)\"})\nviewof wB = Inputs.range([30000, 120000], {value: 55000, step: 500, label: \"City B: average wage ($/yr)\"})\nviewof rB = Inputs.range([6000, 48000], {value: 12000, step: 250, label: \"City B: housing cost ($/yr)\"})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\ndA = (rA_ - rB) - (wA - wB)      // amenity value of A relative to B\nPlot.plot({\n  height: 220, marginLeft: 210,\n  x: {label: \"Dollars per year: City A minus City B →\", grid: true},\n  y: {label: null},\n  marks: [\n    Plot.ruleX([0]),\n    Plot.barX([\n      {k: \"Higher housing cost in A\", v: rA_ - rB},\n      {k: \"Higher wage in A\", v: wA - wB},\n      {k: \"Implied amenity value of A\", v: dA}\n    ], {x: \"v\", y: \"k\", fill: d =&gt; d.k.startsWith(\"Implied\") ? \"#881124\" : \"#999\"})\n  ]\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nShow the simulation code\nfq = d3.format(\",.0f\")\nhtml`&lt;p class=\"readout\"&gt;Residents of City A pay $${fq(Math.abs(rA_ - rB))} ${rA_ &gt;= rB ? \"more\" : \"less\"} for housing and earn $${fq(Math.abs(wA - wB))} ${wA &gt;= wB ? \"more\" : \"less\"} than in City B. If both cities are in spatial equilibrium, City A's amenities are worth &lt;strong&gt;$${fq(Math.abs(dA))} per year ${dA &gt;= 0 ? \"more\" : \"less\"}&lt;/strong&gt; than City B's.&lt;/p&gt;`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThings to try\n\nSet equal wages in the two cities and raise City A’s housing cost. What does the model conclude about City A?\nNow give City A higher wages and higher housing costs by the same amount. Why does the model say the amenities are equal? What does the wage difference reflect instead?\nFind settings where City A pays more in rent and earns less. What kind of real place looks like this?\nThe model assumes people can move freely. If moving is costly, which way could the estimates be wrong?",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Measuring Quality of Life"
+    ]
+  },
+  {
+    "objectID": "quality-of-life.html#what-the-evidence-says",
+    "href": "quality-of-life.html#what-the-evidence-says",
+    "title": "Measuring Quality of Life",
+    "section": "What the evidence says",
+    "text": "What the evidence says\nAlbouy (2016) uses wages, housing costs, and land values across U.S. metro areas to measure, in dollars, both how productive each place is and how much its residents value its quality of life, and then combines them into the total value of a city’s amenities. The paper turns the simple equation above into a full accounting of what places are worth. As you read, notice how it handles land values, the cost of goods other than housing, and taxes, and think about how each choice could change a city’s ranking.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Measuring Quality of Life"
+    ]
+  },
+  {
+    "objectID": "quality-of-life.html#closer-to-home",
+    "href": "quality-of-life.html#closer-to-home",
+    "title": "Measuring Quality of Life",
+    "section": "Closer to home",
+    "text": "Closer to home\n\nLook up average wages and rents for Portland, Lewiston–Auburn, and Bangor. Using the simulation, which looks most “productive,” and which looks most “pleasant”?\nMany people accept lower pay to live on the Maine coast. What does that suggest about its amenity value? How would you check?\n\n\nNetwork lens: migration follows networks\nThe model treats every move as a free choice among cities. In practice, people move where they know people. Bailey et al. (2018) show that places linked by past migration remain socially connected for generations, and that connectedness predicts future migration. A city’s “outside option” therefore depends on who you know elsewhere, which helps explain why some places with similar wages and amenities attract very different numbers of newcomers.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Measuring Quality of Life"
+    ]
+  },
+  {
+    "objectID": "quality-of-life.html#did-you-know",
+    "href": "quality-of-life.html#did-you-know",
+    "title": "Measuring Quality of Life",
+    "section": "Did you know?",
+    "text": "Did you know?\nJennifer Roback’s 1982 framework built on work by Sherwin Rosen, who showed in 1979 that wage differences across cities could be used to value climate and other local conditions. Their combined approach, often called the Rosen–Roback model, underlies many of the “best places to live” rankings you see today, even when the rankings do not say so.",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Measuring Quality of Life"
+    ]
+  },
+  {
+    "objectID": "quality-of-life.html#practice-questions",
+    "href": "quality-of-life.html#practice-questions",
+    "title": "Measuring Quality of Life",
+    "section": "Practice questions",
+    "text": "Practice questions\n\nUse the spatial equilibrium condition to derive the value of a city’s amenities relative to another city’s.\nExplain the difference between a productive city and a high-amenity city using wages and housing costs.\nWhy might quality-of-life estimates be biased if moving is costly?",
+    "crumbs": [
+      "Local Government and Quality of Life",
+      "Measuring Quality of Life"
+    ]
+  }
+]

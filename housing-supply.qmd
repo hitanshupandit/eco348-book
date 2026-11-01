@@ -1,0 +1,107 @@
+---
+title: "Housing Supply and Affordability"
+subtitle: "Week 7 · Why the same demand boom raises prices in some cities and building in others"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** @glaeser2018supply; @saiz2010.
+:::
+
+## The model
+
+When more people want to live in a city, two things can happen: builders add homes, or prices rise. Which one wins depends on the **price elasticity of housing supply**, $\varepsilon_S$: the percentage increase in the housing stock when prices rise 1 percent.
+
+### Supply, demand, and elasticities
+
+With constant-elasticity supply and demand, if demand rises by $X$ percent (at every price, people want $X$ percent more housing), the new equilibrium satisfies
+
+$$
+\%\Delta P \approx \frac{X}{\varepsilon_S + \varepsilon_D}, \qquad \%\Delta Q \approx \varepsilon_S \cdot \%\Delta P,
+$$
+
+where $\varepsilon_D$ is the (absolute) price elasticity of demand. When supply is **elastic**, the boom shows up mostly as new homes. When supply is **inelastic**, it shows up mostly as higher prices.
+
+### What makes supply inelastic?
+
+- **Geography.** Water, wetlands, and steep slopes leave less land to build on.
+- **Regulation.** Zoning, minimum lot sizes, height limits, parking requirements, and slow permitting raise the cost of adding homes.
+
+### Prices versus construction costs
+
+A useful test: compare home prices with the **minimum profitable production cost**, what it costs to build a home plus a normal profit and a modest amount of land. If prices sit far above that cost for years, something is preventing builders from adding homes, which economists often interpret as an implicit "regulatory tax."
+
+## Simulation
+
+Prices and quantities start at 100 (index values). Increase demand and see how the outcome depends on supply elasticity.
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof X = Inputs.range([0, 40], {value: 20, step: 1, label: "Increase in housing demand, X (%)"})
+viewof eS = Inputs.range([0.1, 5], {value: 0.5, step: 0.1, label: "Supply elasticity, εS"})
+viewof eD = Inputs.range([0.2, 1.5], {value: 0.7, step: 0.05, label: "Demand elasticity, εD (absolute value)"})
+```
+
+```{ojs}
+//| code-fold: true
+// Supply: Q = 100 (P/100)^eS.  Demand: Q = 100 (1 + X/100) (P/100)^(-eD).
+P1 = 100 * Math.pow(1 + X / 100, 1 / (eS + eD))
+Q1 = 100 * Math.pow(P1 / 100, eS)
+Pgrid = d3.range(60, 200, 1)
+Plot.plot({
+  height: 340, marginLeft: 50,
+  x: {label: "Housing quantity (index) →", domain: [60, 200]},
+  y: {label: "↑ Price (index)", domain: [60, 200], grid: true},
+  color: {legend: true, domain: ["Supply", "Demand before", "Demand after"], range: ["#2b6cb0", "#999", "#881124"]},
+  marks: [
+    Plot.line(Pgrid, {x: p => 100 * Math.pow(p / 100, eS), y: p => p, stroke: () => "Supply", strokeWidth: 2.5}),
+    Plot.line(Pgrid, {x: p => 100 * Math.pow(p / 100, -eD), y: p => p, stroke: () => "Demand before", strokeDasharray: "5,4"}),
+    Plot.line(Pgrid, {x: p => 100 * (1 + X / 100) * Math.pow(p / 100, -eD), y: p => p, stroke: () => "Demand after", strokeWidth: 2.5}),
+    Plot.dot([{q: 100, p: 100}, {q: Q1, p: P1}], {x: "q", y: "p", r: 5, fill: "black"})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+html`<table class="table table-sm readout"><tbody>
+  <tr><td>Price change</td><td>+${(P1 - 100).toFixed(1)}%</td></tr>
+  <tr><td>Change in the housing stock</td><td>+${(Q1 - 100).toFixed(1)}%</td></tr>
+  <tr><td>Share of the demand boom that shows up as new housing</td><td>${X > 0 ? (100 * Math.log(Q1 / 100) / Math.log(1 + X / 100)).toFixed(0) + "%" : "n/a"}</td></tr>
+</tbody></table>`
+```
+:::
+
+### Things to try
+
+1. Hold demand growth at 20 percent. Compare supply elasticity 0.3 (a tightly constrained coastal city) with 3 (a fast-growing Sun Belt city). How different are the price increases?
+2. In the constrained case, how big a demand boom does it take to raise prices by 25 percent?
+3. Make demand more elastic. Why does that soften the price increase?
+4. A city loosens zoning so that supply elasticity doubles. Using the simulation, describe what happens the next time demand rises.
+
+## What the evidence says
+
+**Geography and regulation together.** @saiz2010 measures how much land within reach of each U.S. metro area's center is lost to water and steep slopes, using satellite and elevation data. Metros with more unbuildable land have less elastic housing supply, and those same metros also tend to have stricter land-use regulation. Supply elasticity, in turn, shapes whether demand growth shows up as price growth or as new homes.
+
+**Prices far above building costs.** @glaeser2018supply compare home prices with the minimum profitable production cost. In most of the United States, prices are close to that cost. In a set of high-demand, mostly coastal metros, they are far above it, which points to regulation rather than construction costs as the main reason housing is expensive there. They also argue that restrictions in productive cities keep workers out of the places where they would earn the most.
+
+## Closer to home
+
+- Portland, Maine, sits on a peninsula, with Casco Bay and Back Cove limiting buildable land near downtown. Which part of Saiz's measure does that resemble?
+- Maine passed a 2022 law that requires towns to allow more types of housing, such as accessory dwelling units, in many areas. In the simulation, what would that do to $\varepsilon_S$, and what would you expect to happen to prices?
+
+::: {.network-lens}
+### Network lens: housing markets are linked by commutes
+
+A city's housing market is not an island. Commuting networks tie Portland to South Portland, Westbrook, Scarborough, and towns farther out, and tie Lewiston–Auburn to Portland and Augusta. When building is constrained in the center, demand spills along the commuting links into surrounding towns, raising prices there and lengthening commutes. Mapping commuting flows (for example, from Census commuting data) shows which towns are part of the same housing market and where new housing would relieve the most pressure.
+:::
+
+## Did you know?
+
+The idea that land-use regulation acts like a tax on new housing goes back decades, but Glaeser and Gyourko's comparison of prices with construction costs made it measurable for every metro area, and it now shapes debates over zoning reform across the country.
+
+## Practice questions
+
+1. Using supply and demand, show why the same increase in demand raises prices more in a city with inelastic supply.
+2. What two factors make housing supply inelastic, according to @saiz2010? How are they related?
+3. Explain the logic of comparing home prices with the minimum profitable production cost.

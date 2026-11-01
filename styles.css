@@ -1,0 +1,57 @@
+/* Bates garnet accents for the ECON 348 Urban Economics Lab */
+:root {
+  --garnet: #881124;
+}
+
+h1.title, h2, h3 {
+  color: var(--garnet);
+}
+
+a {
+  color: var(--garnet);
+}
+
+/* Simulation panels */
+.sim {
+  border: 1px solid rgba(136, 17, 36, 0.25);
+  border-radius: 6px;
+  padding: 0.75rem 1rem 0.25rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.sim form {
+  margin-bottom: 0.25rem;
+}
+
+/* Give slider labels room so they don't wrap onto several lines */
+.sim form {
+  --label-width: 260px !important;
+  --input-width: 220px !important;
+}
+
+@media (max-width: 700px) {
+  .sim form {
+    --label-width: 100% !important;
+    --input-width: 100% !important;
+  }
+}
+
+/* Readout of key numbers under each simulation */
+.readout {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Optional "Network lens" sections */
+.network-lens {
+  border-left: 4px solid var(--garnet);
+  background: rgba(136, 17, 36, 0.04);
+  padding: 0.5rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .network-lens {
+    background: rgba(255, 255, 255, 0.04);
+  }
+}

@@ -1,0 +1,102 @@
+---
+title: "Measuring Quality of Life"
+subtitle: "Week 11 · What wages and housing costs reveal about amenities"
+---
+
+::: {.callout-note appearance="simple"}
+**Read:** Brueckner, Chapter 11; @albouy2016.
+:::
+
+## The model
+
+How do you put a dollar value on sunshine, a coastline, or low crime? You can't buy them directly, but you can see what people **give up** to have them. That is the idea behind quality-of-life rankings in urban economics.
+
+### Reading amenities from prices
+
+Return to spatial equilibrium across cities ([Why Cities Exist](why-cities.qmd)). If workers can move freely, then in every city
+
+$$
+w_i - r_i + a_i = \bar{V},
+$$
+
+where $w_i$ is the wage, $r_i$ the cost of housing, and $a_i$ the dollar value of the city's amenities. Rearranging gives the value of amenities **relative to other cities**:
+
+$$
+a_i - a_j = (r_i - r_j) - (w_i - w_j).
+$$
+
+A city has valuable amenities if people **pay more for housing than its wages justify**, or accept **lower wages than its housing costs require**. This framework comes from @roback1982 and is the basis of modern quality-of-life indexes.
+
+### Productivity versus quality of life
+
+The same data reveal two different things. High wages **and** high housing costs mean firms value the place: it is **productive**. High housing costs with **low** wages mean households value the place: it is **pleasant**. Real indexes refine this with the share of income spent on housing, taxes, and the cost of other goods, but the logic is the same.
+
+## Simulation
+
+Enter yearly wages and housing costs for two cities, and see what the model implies about how residents value their amenities.
+
+::: {.sim}
+```{ojs}
+//| echo: false
+viewof wA = Inputs.range([30000, 120000], {value: 62000, step: 500, label: "City A: average wage ($/yr)"})
+viewof rA_ = Inputs.range([6000, 48000], {value: 18000, step: 250, label: "City A: housing cost ($/yr)"})
+viewof wB = Inputs.range([30000, 120000], {value: 55000, step: 500, label: "City B: average wage ($/yr)"})
+viewof rB = Inputs.range([6000, 48000], {value: 12000, step: 250, label: "City B: housing cost ($/yr)"})
+```
+
+```{ojs}
+//| code-fold: true
+dA = (rA_ - rB) - (wA - wB)      // amenity value of A relative to B
+Plot.plot({
+  height: 220, marginLeft: 210,
+  x: {label: "Dollars per year: City A minus City B →", grid: true},
+  y: {label: null},
+  marks: [
+    Plot.ruleX([0]),
+    Plot.barX([
+      {k: "Higher housing cost in A", v: rA_ - rB},
+      {k: "Higher wage in A", v: wA - wB},
+      {k: "Implied amenity value of A", v: dA}
+    ], {x: "v", y: "k", fill: d => d.k.startsWith("Implied") ? "#881124" : "#999"})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+fq = d3.format(",.0f")
+html`<p class="readout">Residents of City A pay $${fq(Math.abs(rA_ - rB))} ${rA_ >= rB ? "more" : "less"} for housing and earn $${fq(Math.abs(wA - wB))} ${wA >= wB ? "more" : "less"} than in City B. If both cities are in spatial equilibrium, City A's amenities are worth <strong>$${fq(Math.abs(dA))} per year ${dA >= 0 ? "more" : "less"}</strong> than City B's.</p>`
+```
+:::
+
+### Things to try
+
+1. Set equal wages in the two cities and raise City A's housing cost. What does the model conclude about City A?
+2. Now give City A **higher** wages and **higher** housing costs by the same amount. Why does the model say the amenities are equal? What does the wage difference reflect instead?
+3. Find settings where City A pays more in rent **and** earns less. What kind of real place looks like this?
+4. The model assumes people can move freely. If moving is costly, which way could the estimates be wrong?
+
+## What the evidence says
+
+@albouy2016 uses wages, housing costs, and land values across U.S. metro areas to measure, in dollars, both how productive each place is and how much its residents value its quality of life, and then combines them into the total value of a city's amenities. The paper turns the simple equation above into a full accounting of what places are worth. As you read, notice how it handles land values, the cost of goods other than housing, and taxes, and think about how each choice could change a city's ranking.
+
+## Closer to home
+
+- Look up average wages and rents for Portland, Lewiston–Auburn, and Bangor. Using the simulation, which looks most "productive," and which looks most "pleasant"?
+- Many people accept lower pay to live on the Maine coast. What does that suggest about its amenity value? How would you check?
+
+::: {.network-lens}
+### Network lens: migration follows networks
+
+The model treats every move as a free choice among cities. In practice, people move where they know people. @bailey2018social show that places linked by past migration remain socially connected for generations, and that connectedness predicts future migration. A city's "outside option" therefore depends on who you know elsewhere, which helps explain why some places with similar wages and amenities attract very different numbers of newcomers.
+:::
+
+## Did you know?
+
+Jennifer Roback's 1982 framework built on work by Sherwin Rosen, who showed in 1979 that wage differences across cities could be used to value climate and other local conditions. Their combined approach, often called the Rosen–Roback model, underlies many of the "best places to live" rankings you see today, even when the rankings do not say so.
+
+## Practice questions
+
+1. Use the spatial equilibrium condition to derive the value of a city's amenities relative to another city's.
+2. Explain the difference between a productive city and a high-amenity city using wages and housing costs.
+3. Why might quality-of-life estimates be biased if moving is costly?
