@@ -1,4 +1,4 @@
-# Urban Economics Lab (ECON 348)
+# Urban Economics (ECON 348)
 
 Interactive course notes for ECON 348: Urban Economics, written in Markdown (`.qmd` files) and built with [Quarto](https://quarto.org). Each topic page explains a model, has a simulation with sliders that runs in the browser (Observable JS, built into Quarto), and adds "Things to try," evidence from the assigned readings, a Maine example, an optional Network lens, and practice questions.
 

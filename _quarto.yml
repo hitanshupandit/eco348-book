@@ -5,7 +5,7 @@ project:
     - .nojekyll
 
 website:
-  title: "Urban Economics Lab"
+  title: "Urban Economics"
   description: "Interactive notes for ECON 348: Urban Economics, Bates College, Winter 2027"
   page-navigation: true
   search: true

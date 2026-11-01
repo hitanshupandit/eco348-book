@@ -243,7 +243,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Urban Economics Lab",
+    "title": "Urban Economics",
     "section": "",
     "text": "Why do people pay so much to live close together? Why does rent fall as you move away from downtown? Why does adding highway lanes rarely fix traffic? This site works through the core models of urban economics, one topic per week, and lets you change the inputs and watch the model respond.\nEach page follows the course schedule and pairs with Jan Brueckner’s Lectures on Urban Economics (Brueckner 2011) and the assigned articles. The pages are meant to be read alongside the textbook, not in place of it.",
     "crumbs": [
@@ -253,7 +253,7 @@
   {
     "objectID": "index.html#how-each-page-works",
     "href": "index.html#how-each-page-works",
-    "title": "Urban Economics Lab",
+    "title": "Urban Economics",
     "section": "How each page works",
     "text": "How each page works\n\nThe model. The economic logic, with the one or two equations you need. This is what you should be able to draw and derive on a midterm.\nSimulation. Sliders that change the model’s inputs. The graph and the numbers below it update immediately. Everything runs in your browser; nothing to install.\nThings to try. Short experiments with the simulation, each with a question to answer.\nWhat the evidence says. What the assigned research finds, and how the authors know.\nCloser to home. Lewiston–Auburn, Portland, and the rest of Maine.\nNetwork lens. An optional note on how network data and network thinking shed light on the topic.\nDid you know? A short historical or real-world aside.",
     "crumbs": [
@@ -263,7 +263,7 @@
   {
     "objectID": "index.html#topics",
     "href": "index.html#topics",
-    "title": "Urban Economics Lab",
+    "title": "Urban Economics",
     "section": "Topics",
     "text": "Topics\nWhy cities exist\n\nWhy Cities Exist: agglomeration, spatial equilibrium, and how big a city gets (Week 1)\nThe Monocentric City: rent gradients and the edge of the city (Week 2)\nExtending the Model: closed versus open cities, and what remote work does to rents (Week 3)\n\nLand use and transportation\n\nSprawl and Land-Use Controls: why market cities can spread out too far (Week 4)\nTraffic Congestion: congestion tolls and the fundamental law of road congestion (Week 5)\n\nHousing\n\nOwning versus Renting: the user cost of housing and the tax code (Week 6)\nHousing Supply and Affordability: why the same demand boom raises prices in some cities and building in others (Week 7)\nHousing Policy: rent control and vouchers (Week 8)\n\nLocal government and quality of life\n\nLocal Public Goods and Neighborhoods: Tiebout sorting and capitalization (Week 9)\nPollution and Crime: Pigouvian taxes, Coase, and social multipliers (Week 10)\nMeasuring Quality of Life: what wages and rents reveal about amenities (Week 11)\nPlace-Based Policy: local multipliers and who gains from helping places (Week 12)\n\n\n\n\n\n\n\nNoteAbout the numbers\n\n\n\nThe simulations use simple versions of the models with made-up but realistic numbers. They are built to show how the models work, not to describe any real city. When a page reports real findings, it cites the research.",
     "crumbs": [

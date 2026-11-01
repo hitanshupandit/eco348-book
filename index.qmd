@@ -1,5 +1,5 @@
 ---
-title: "Urban Economics Lab"
+title: "Urban Economics"
 subtitle: "Interactive notes for ECON 348: Urban Economics · Bates College · Winter 2027"
 toc: false
 ---
