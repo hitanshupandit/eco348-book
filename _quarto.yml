@@ -46,6 +46,7 @@ format:
   html:
     theme: cosmo
     css: styles.css
+    include-after-body: cat.html
     toc: true
     toc-title: "On this page"
     html-math-method: mathjax
